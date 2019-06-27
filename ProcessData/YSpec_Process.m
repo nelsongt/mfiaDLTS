@@ -5,7 +5,7 @@ format long
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'C9S25'
+Folder_Name = 'C10S711_150kHz300mV'
 %% File read code  % TODO: Clean up by moving to own function
 F_dir = strcat(Folder_Name, '\*_*.dat');
 F = dir(F_dir);
