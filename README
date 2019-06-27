@@ -1,7 +1,5 @@
 Dependencies:
-
 General:
   MATLAB
-
 Transient_To_CDLTS.m:
   [optional] ezfit:  http://www.fast.u-psud.fr/ezyfit/
