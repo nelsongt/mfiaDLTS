@@ -1,3 +1,5 @@
+%%  Author:  George Nelson, Copyright 2019 %%
+
 clear
 format long
 
