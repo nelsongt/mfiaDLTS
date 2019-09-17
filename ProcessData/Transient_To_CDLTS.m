@@ -8,7 +8,7 @@ expconst = (exp(-2)-1)/2;
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'FGA015_3'
+Folder_Name = 'C10S711_750kHzFull'
 %% File read code  % TODO: Clean up by moving to own function
 F_dir = strcat(Folder_Name, '\*_*.iso');
 F = dir(F_dir);
@@ -50,9 +50,9 @@ sampling_period = (1 / sampling_rate) * (length(Data{1,1}));
 
 %% Define list of rate windows           NOTE: May need to be changed depending on filter function
 %rate_window = logspace(log10(20),log10(110),10);  % auto generate a list
-rate_window = [20,50,100,200,500,1000];  % suggested windows: 20,50,100,200,500,1000,2000,5000
-%rate_window = [32,64,128,256,512,1024];  % also a good list: 16,32,64,256,512,1024
-%rate_window = 20;                     % single rate good for plotting
+rate_window = [20,50,100,200,500,1000,2000];  % suggested windows: 20,50,100,200,500,1000,2000,5000
+%rate_window = [32,64,128,256];  % also a good list: 16,32,64,256,512,1024
+%rate_window = 50;                     % single rate good for plotting
 
 del_cap = zeros(length(rate_window),total);
 del_cap_norm = zeros(length(rate_window),total);
@@ -81,15 +81,15 @@ del_cap_norm = zeros(length(rate_window),total);
 %    hold off
 %    close
 %end
-for jj = 1:length(rate_window)
-    f = ezfit(Temps, del_cap(jj,:), 'ngauss');
-    g = str2sym(f.eq);
-    fitvars = symvar(g);
-    h = subs(g,fitvars(1:length(f.m)),f.m);
-    fit_y(jj,:) = subs(h,fitvars(length(fitvars)),Temps);
-    dh = diff(h);
-    fit_temps(jj) = solve(dh);
-end
+%for jj = 1:length(rate_window)
+%    f = ezfit(Temps, del_cap(jj,:), 'ngauss');
+%    g = str2sym(f.eq);
+%    fitvars = symvar(g);
+%    h = subs(g,fitvars(1:length(f.m)),f.m);
+%    fit_y(jj,:) = subs(h,fitvars(length(fitvars)),Temps);
+%    dh = diff(h);
+%    fit_temps(jj) = solve(dh);
+%end
 
 
 
@@ -117,18 +117,18 @@ box on
 hold off;
 
 %% Plot Arrhenius plot
-figure
-hold on;
-set(gca,'FontSize',11)
-gYLabel = ylabel('ln(T^2/e)','fontsize',13       );
-gXLabel = xlabel('1000/T (K^{-1})','fontsize',13           );
-arr_temps = 1000 ./ fit_temps;
-arr_emits = log(fit_temps.^2 ./ rate_window);
-scatter(arr_temps,arr_emits);
-g = ezfit('a*x+b');
-box on
-showfit(g);
-hold off;
+%figure
+%hold on;
+%set(gca,'FontSize',11)
+%gYLabel = ylabel('ln(T^2/e)','fontsize',13       );
+%gXLabel = xlabel('1000/T (K^{-1})','fontsize',13           );
+%arr_temps = 1000 ./ fit_temps;
+%arr_emits = log(fit_temps.^2 ./ rate_window);
+%scatter(arr_temps,arr_emits);
+%g = ezfit('a*x+b');
+%box on
+%showfit(g);
+%hold off;
 
 
 figure
@@ -149,7 +149,7 @@ xlim([0 400]);
 hold on;
 for jj = 1:length(rate_window)
     %scatter(Temps,del_cap_norm(jj,:),5,'filled');
-    plot(sort(Temps),2*4e16*abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
+    plot(sort(Temps),2*7e14*abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
     %plot(sort(Temps),abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
     %plot (Temps,fit_y(jj,:));
 end
