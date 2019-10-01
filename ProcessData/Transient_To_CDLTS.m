@@ -59,18 +59,18 @@ del_cap_norm = zeros(length(rate_window),total);
 
 
 %% List of filter functions, one must be used and only one
-%[del_cap,del_cap_norm] = weightboxcar(Data,rate_window,sampling_rate,ss_caps,total);    %TODO: Find proper gating and timing
+%[del_cap,del_cap_norm] = weightboxcar(Data,rate_window,sampling_rate,ss_caps,total);      %TODO: Find proper gating and timing, was this done?
 %[del_cap,del_cap_norm] = weightlockin(Data,rate_window,sampling_rate,ss_caps,total);
-[del_cap,del_cap_norm] = weightexp(Data,rate_window,sampling_rate,ss_caps,total,expconst);
-%[del_cap,del_cap_norm] = weightsine(Data,rate_window,sampling_rate,ss_caps,total);      % Recommended for SNR
-%[del_cap,del_cap_norm] = weightcosine(Data,rate_window,sampling_rate,ss_caps,total);    % Recommended for resolution
+[del_cap,del_cap_norm] = weightexp(Data,rate_window,sampling_rate,ss_caps,total,expconst); % Recommended for SNR
+%[del_cap,del_cap_norm] = weightsine(Data,rate_window,sampling_rate,ss_caps,total);      
+%[del_cap,del_cap_norm] = weightcosine(Data,rate_window,sampling_rate,ss_caps,total);      % Recommended for resolution
 
 
 %% TODO: Re-arrange all data from smallest to largest temperature here
 
 
 
-%% Fit each spectrum     % TODO: Find a way to fit only a certain range of data
+%% Automated Arrhenius plot     % TODO: Find a way to fit only a certain range of data
 %for jj = 1:length(rate_window)
 %    figure
 %    hold on
@@ -81,6 +81,7 @@ del_cap_norm = zeros(length(rate_window),total);
 %    hold off
 %    close
 %end
+%%Alternate version
 %for jj = 1:length(rate_window)
 %    f = ezfit(Temps, del_cap(jj,:), 'ngauss');
 %    g = str2sym(f.eq);
@@ -141,16 +142,16 @@ jXLabel = xlabel('Temp (K)','fontsize',14           );
 %% Plot normalized CDLTS Spectra
 figure
 set(gca,'FontSize',11);
-kYLabel = ylabel('|2*N_D*\DeltaC_0/C| (cm^{-3})','fontsize',14       );
-%kYLabel = ylabel('|\DeltaC_0/C|','fontsize',14       );
+%kYLabel = ylabel('|2*N_D*\DeltaC_0/C| (cm^{-3})','fontsize',14       );
+kYLabel = ylabel('|\DeltaC_0/C|','fontsize',14       );
 kXLabel = xlabel('Temp (K)','fontsize',14           );
 %ylim([10^9 10^15]);
 xlim([0 400]);
 hold on;
 for jj = 1:length(rate_window)
     %scatter(Temps,del_cap_norm(jj,:),5,'filled');
-    plot(sort(Temps),2*7e14*abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
-    %plot(sort(Temps),abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
+    %plot(sort(Temps),2*7e14*abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
+    plot(sort(Temps),abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
     %plot (Temps,fit_y(jj,:));
 end
 set(gca,'yscale','log');
