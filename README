@@ -67,7 +67,7 @@ After CDLTS_Main.m has collected all .iso files, take the generated data folder 
 
 There are many complicated options in this file, such as choice of weighting function, that can be used by experts to tailor their processing. By default, the shifted exponential weighting function is used with rate windows from 20 Hz to 2000 Hz.
 
-To extract the DLTS parameters, the matlab data cursor can be used on the plotted spectra to find the peaks. These peaks should be used to generate an Arrhenius plot. There is primitive support for doing this automatically, but it currently does not work. You will have to generate most Arrhenius plots manually. This process can be understood by reading DLTSBackground.pdf.
+To extract the DLTS parameters, the matlab data cursor can be used on the plotted spectra to find the peaks. These peaks should be used to generate an Arrhenius plot. There is primitive support for doing this automatically, but it currently does not work well. You will have to generate most Arrhenius plots manually. This process can be understood by reading DLTSBackground.pdf.
 
 % SimulateData %
 
