@@ -79,7 +79,7 @@ To extract the DLTS parameters, the matlab data cursor can be used on the plotte
 
 To simulate DLTS, Transient_Sim.m can be used to generate transients for any number of traps. The trap characteristics (energy, cross-section, density) can be inputted in the simulator and these values should be recovered after processing the spectra. To create the conventional spectra from the simulated transients, use Transient_To_CDLTS.m. Take the generated transient files and place them in a folder in the ProcessData folder, then point Transient_To_CDLTS.m to that folder. Currently, the automated peak fitting is primitive, but creating the Arrhenius plots from the plotted spectra is simple to do manually.
 
-*This was originally developed by George Nelson of NanoPower Research Labs at Rochester Institute of Technology to be used in experiments funded by AF AEDC under SBIR# F151-173-0753
+*This was originally developed by George Nelson of NanoPower Research Labs at Rochester Institute of Technology to be used in experiments funded by AF AEDC under SBIR# F151-173-0753*
 
 
 
