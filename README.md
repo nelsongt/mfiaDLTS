@@ -1,5 +1,5 @@
-## Introduction
-
+Introduction
+------------
 
 This is a collection of tools I have developed over the course of my PhD for performing Deep Level Transient Spectroscopy (DLTS) using a Zurich Instruments MFIA. The tools are not in the most user friendly state, but this code is the most complete open-source DLTS implementation that I am aware of. I will continue to update the tools as they are actively used at the RIT lab.
 
@@ -14,7 +14,8 @@ The data files are compatible with the LDLTS software database, so that Laplace 
 -George Nelson, 2019 (gtn1425@rit.edu)
 
 
-%% Requirements %%
+Requirements
+------------
 
 -Device to perform DLTS on
 -Cryostat with electrical leads for device connection
@@ -23,7 +24,8 @@ The data files are compatible with the LDLTS software database, so that Laplace 
 -PC with MATLAB to run this code
 
 
-%% Organization of Code %%
+Organization of Code
+------------
 
 In this early stage, the code is organized into 3 folders:
 
@@ -33,7 +35,8 @@ ProcessData - These tools will process the CDLTS and YSpec data files. The data 
 
 SimulateData - This is a basic simulation tool to generate .iso files with transient data. Useful for debugging or predicting results or learning how DLTS works.
 
-%% Software Dependencies %%
+Software Dependencies
+------------
 
 General:
   MATLAB
@@ -47,9 +50,10 @@ AcquireData:
   [required, included] lakshore driver: https://www.mathworks.com/matlabcentral/fileexchange/48366-lakeshore
   [required, included] cprintf: https://www.mathworks.com/matlabcentral/fileexchange/24093-cprintf-display-formatted-colored-text-in-the-command-window
   
-%% How To Use %%
+How To Use
+------------
 
-% AcquireData %
+#### AcquireData
 
 To take data, make sure that the software dependencies are installed correctly. You will then need to wire the MFIA properly, for this I will make a wiring diagram in the future. In the meantime:
 
@@ -63,7 +67,7 @@ Once setup, start the program and the output will make sure the MFIA and the lak
 
 *This code was initially inspired by software on the Zurich Instruments blogs.
 
-% ProcessData %
+#### ProcessData
 
 After CDLTS_Main.m has collected all .iso files, take the generated data folder and move it from AcquireData to ProcessData. Then, open Transient_To_CDLTS.m and point the data folder to the folder that you just moved. It will go into that folder and process all the .iso files to generate a spectra.
 
@@ -71,7 +75,7 @@ There are many complicated options in this file, such as choice of weighting fun
 
 To extract the DLTS parameters, the matlab data cursor can be used on the plotted spectra to find the peaks. These peaks should be used to generate an Arrhenius plot. There is primitive support for doing this automatically, but it currently does not work well. You will have to generate most Arrhenius plots manually. This process can be understood by reading DLTSBackground.pdf.
 
-% SimulateData %
+#### SimulateData
 
 To simulate DLTS, Transient_Sim.m can be used to generate transients for any number of traps. The trap characteristics (energy, cross-section, density) can be inputted in the simulator and these values should be recovered after processing the spectra. To create the conventional spectra from the simulated transients, use Transient_To_CDLTS.m. Take the generated transient files and place them in a folder in the ProcessData folder, then point Transient_To_CDLTS.m to that folder. Currently, the automated peak fitting is primitive, but creating the Arrhenius plots from the plotted spectra is simple to do manually.
 
