@@ -1,4 +1,4 @@
-function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_ACQ(Fs, timeConstant, ssBias, acFreq, acAmplitude, saveTime)
+function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_ACQ(Fs, timeConstant, ssBias, pBias, acFreq, acAmplitude, saveTime)
 
 
 %% J.Wei Zurich Instruments May 19, 2015
@@ -71,8 +71,14 @@ function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_ACQ(Fs, timeConsta
   % Output settings
   ziDAQ('setDouble', ['/' device '/imps/0/output/range'], vrange);
   ziDAQ('setInt', ['/' device '/imps/0/output/on'], 1);
-  %ziDAQ('setInt', ['/' device '/sigouts/0/add'], 0);
+  ziDAQ('setInt', ['/' device '/sigouts/0/add'], 1);
   ziDAQ('setDouble', ['/' device '/sigouts/0/offset'], ssBias);
+  ziDAQ('setInt', ['/' device '/tu/thresholds/0/input'], 59);
+  ziDAQ('setInt', ['/' device '/tu/logicunits/0/inputs/0/not'], 1);
+  ziDAQ('setDouble', ['/' device '/tu/thresholds/0/deactivationtime'], 0.151);
+  ziDAQ('setDouble', ['/' device '/tu/thresholds/0/activationtime'], 0.01);
+  ziDAQ('setInt', ['/' device '/auxouts/0/outputselect'], 13);
+  ziDAQ('setDouble', ['/' device '/auxouts/0/scale'], pBias);
   
   clock =  ziDAQ('getInt', ['/' device '/clockbase']);  % find MFIA clock
   %for timestamp

@@ -14,7 +14,7 @@ ac_ampl = 0.10;         % V, lock in AC amplitude, GN suggests ~100 mV for good 
 sample_rate = 107143;   % Hz, sampling rate Hz, for CDLTS use 53571 or 107143 (MFIA half and full data rate, full is better but maybe not reliable)
 sample_time = 60;       % sec, length to sample each temp point, determines speed of scan and SNR
 ss_bias = -3.3;         % V, steady-state bias
-pulse_bias = 3.3;		% V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
+p_height = 3.3;		% V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
 
 % Set DLTS experiment parameters
 sample_period = 0.160;  % s, length of single experiment in time
@@ -47,7 +47,7 @@ while current_num <= steps
     
     cprintf('blue', 'Capturing transient...\n');
     temp_before = sampleSpaceTemperature;
-    [timestamp, sampleCap] = MFIA_CAPACITANCE_ACQ(sample_rate,time_constant,ss_bias,ac_freq,ac_ampl,sample_time);
+    [timestamp, sampleCap] = MFIA_CAPACITANCE_ACQ(sample_rate,time_constant,ss_bias,p_height,ac_freq,ac_ampl,sample_time);
     temp_after = sampleSpaceTemperature;
     cprintf('green', 'Finished transient for this temperature.\n');
     avg_temp = (temp_before + temp_after) / 2;
