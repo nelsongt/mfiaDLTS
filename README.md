@@ -17,11 +17,11 @@ The data files are compatible with the LDLTS software database, so that Laplace 
 Requirements
 ------------
 
--Device to perform DLTS on
--Cryostat with electrical leads for device connection
--Lakeshore temperature controller to control cryostat temperature
--Zurich Instruments MFIA
--PC with MATLAB to run this code
+  -Device to perform DLTS on
+  -Cryostat with electrical leads for device connection
+  -Lakeshore temperature controller to control cryostat temperature
+  -Zurich Instruments MFIA
+  -PC with MATLAB to run this code
 
 
 Organization of Code
