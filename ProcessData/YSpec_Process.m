@@ -1,11 +1,9 @@
-%%  Author:  George Nelson, Copyright 2019 %%
-
 clear
 format long
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'C9S25'
+Folder_Name = 'HamD5Pre_500mV'
 %% File read code  % TODO: Clean up by moving to own function
 F_dir = strcat(Folder_Name, '\*_*.dat');
 F = dir(F_dir);
@@ -31,13 +29,27 @@ for ii = 1:length(F)
     fclose(fileID);
 end
 
+Data = sortBlikeA(Temps,Data);
+Temps = sort(Temps);
+
+%% Plotting
+color = jet(length(Data));
+
+% Capacitance plot
 figure
 for i = 1:length(Data)
-    semilogx(Data{1,i}(:,1),Data{1,i}(:,2));
+    semilogx(Data{1,i}(:,1)/(2*pi()),Data{1,i}(:,2)*1e12,'Color',color(i,:));
     hold on;
 end
+colormap(color);
+h = colorbar;
+caxis([Temps(1) Temps(length(Temps))]);
+ylabel(h, 'Temperature (K)');
+xlabel('Frequency (Hz)','fontsize',14);
+ylabel('Capacitance (pF)','fontsize',14);
 hold off;
 
+% Conductance plot
 figure
 for i = 1:length(Data)
     semilogx(Data{1,i}(:,1),Data{1,i}(:,3)./Data{1,i}(:,1));
