@@ -32,8 +32,12 @@ addpath(genpath('.\LabOneMatlab-18.05.53868'))   % point to LabOneMatlab drivers
 ziAddPath % ZI instrument driver load
 
 %% MAIN %%
-% Check for lakeshore 331
+% Check for and initialize lakeshore 331
 if LAKESHORE_INIT()==0
+    return;
+end
+% Check for and initialize MFIA
+if MFIA_INIT()==0
     return;
 end
 
