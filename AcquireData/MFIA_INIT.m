@@ -1,10 +1,10 @@
-function success = MFIA_CAPACITANCE_ACQ(Fs, timeConstant, ssBias, pBias, acFreq, acAmplitude, saveTime)
+function device = MFIA_INIT(Fs, timeConstant, ssBias, pBias, acFreq, acAmplitude)
 
 
 %% MFIA Initialization, George Nelson Oct 2019
-
-
+  
   clear ziDAQ;
+  device = 0;
   
   %% Open connection to the ziServer (socket for sync interface)
   %ziDAQ('connect', '192.168.51.254', 8004, 5);
@@ -69,13 +69,9 @@ function success = MFIA_CAPACITANCE_ACQ(Fs, timeConstant, ssBias, pBias, acFreq,
   ziDAQ('setInt', ['/' device '/auxouts/0/outputselect'], 13);
   ziDAQ('setDouble', ['/' device '/auxouts/0/scale'], pBias);
   
-  clock =  ziDAQ('getInt', ['/' device '/clockbase']);  % find MFIA clock
-  %for timestamp
-  
   % Data stream settings
   ziDAQ('setDouble', ['/' device '/imps/0/demod/rate'], Fs);
   
-  success = 1;
 end
   
 % end of main function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
