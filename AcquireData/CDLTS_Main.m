@@ -14,32 +14,30 @@ ac_ampl = 0.10;         % V, lock in AC amplitude, GN suggests ~100 mV for good 
 sample_rate = 107143;   % Hz, sampling rate Hz, for CDLTS use 53571 or 107143 (MFIA half and full data rate, full is better but maybe not reliable)
 sample_time = 60;       % sec, length to sample each temp point, determines speed of scan and SNR
 ss_bias = -3.3;         % V, steady-state bias
-p_height = 3.3;		% V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
+p_height = 3.3;		    % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
 
 % Set DLTS experiment parameters
 sample_period = 0.160;  % s, length of single experiment in time
 pulse_width = 0.01;     % s, length of pulse in time
-temp_init = 300;         % K, Initial DLTS temperature
+temp_init = 190;        % K, Initial DLTS temperature
 temp_step = 0.5;        % K, Capture transient each temp step
-temp_final = 50;       % K, DLTS ending temperature
+temp_final = 50;        % K, DLTS ending temperature
 temp_idle = 300;        % K, Temp to set after experiment is over
 temp_stability = 0.1;   % K, Sets how close to the setpoint the temperature must be before collecting data (set point +- stability)
 time_stability = 10;    % s, How long must temperature be within temp_stability before collecting data, tests if PID settings overshoot set point, also useful if actual sample temp lags sensor temp
 
 % Setup PATH
 addpath(genpath('.\lakeshore'))					 % point to lakeshore driver
-addpath(genpath('.\LabOneMatlab-18.05.53868'))   % point to LabOneMatlab drivers
+addpath(genpath('.\LabOneMatlab'))               % point to LabOneMatlab drivers
 ziAddPath % ZI instrument driver load
 
 %% MAIN %%
 % Check for and initialize lakeshore 331
-if LAKESHORE_INIT()==0
-    return;
-end
+%if LAKESHORE_INIT()==0
+%    return;
+%end
 % Check for and initialize MFIA
-if MFIA_INIT()==0
-    return;
-end
+device = MFIA_INIT(sample_rate,time_constant,ss_bias,p_height,ac_freq,ac_ampl)
 
 
 current_temp = temp_init;
@@ -47,11 +45,11 @@ current_num = 0;
 steps = ceil(abs(temp_init - temp_final)/temp_step);
 while current_num <= steps
     cprintf('blue', 'Waiting for set point (%3.2f)...\n',current_temp);
-    SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
+%    SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
     
     cprintf('blue', 'Capturing transient...\n');
     temp_before = sampleSpaceTemperature;
-    [timestamp, sampleCap] = MFIA_CAPACITANCE_ACQ(sample_rate,time_constant,ss_bias,p_height,ac_freq,ac_ampl,sample_time);
+    [timestamp, sampleCap] = MFIA_CAPACITANCE_ACQ(device,sample_time);
     temp_after = sampleSpaceTemperature;
     cprintf('green', 'Finished transient for this temperature.\n');
     avg_temp = (temp_before + temp_after) / 2;
@@ -70,7 +68,7 @@ while current_num <= steps
 end
 
 cprintf('blue', 'Finished data collection, returning to idle temp.\n');
-SET_TEMP(temp_idle,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
+%SET_TEMP(temp_idle,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
 cprintf('green', 'All done.\n');
 
 
