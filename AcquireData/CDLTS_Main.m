@@ -33,11 +33,11 @@ ziAddPath % ZI instrument driver load
 
 %% MAIN %%
 % Check for and initialize lakeshore 331
-if LAKESHORE_INIT()==0
-    return;
-end
+%if LAKESHORE_INIT()==0
+%    return;
+%end
 % Check for and initialize MFIA
-device = MFIA_INIT(sample_rate,time_constant,ss_bias,p_height,ac_freq,ac_ampl);
+device = MFIA_INITtemp(sample_rate,time_constant,ss_bias,p_height,ac_freq,ac_ampl);
 
 
 current_temp = temp_init;
@@ -45,16 +45,16 @@ current_num = 0;
 steps = ceil(abs(temp_init - temp_final)/temp_step);
 while current_num <= steps
     cprintf('blue', 'Waiting for set point (%3.2f)...\n',current_temp);
-    SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
+    %SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
     
     cprintf('blue', 'Capturing transient...\n');
     temp_before = sampleSpaceTemperature;
-    [timestamp, sampleCap] = MFIA_CAPACITANCE_ACQ(device,sample_time);
+    [timestamp, sampleCap] = MFIA_CAPACITANCE_ACQ_DAQtemp(device,sample_time,sample_period-pulse_width);
     temp_after = sampleSpaceTemperature;
     cprintf('green', 'Finished transient for this temperature.\n');
     avg_temp = (temp_before + temp_after) / 2;
     
-    avg_trnst = MFIA_TRANSIENT_AVERAGER(sampleCap,sample_rate,sample_period-pulse_width);
+    avg_trnst = MFIA_TRANSIENT_AVERAGERtemp(sampleCap,sample_rate,sample_period-pulse_width);
     
     cprintf('blue', 'Saving transient...\n');
     TRANSIENT_FILE(save_folder,strcat(sample_name,'_',num2str(current_num),'_',num2str(current_temp),'.iso'),avg_trnst,sample_rate,avg_temp,sample_comment);

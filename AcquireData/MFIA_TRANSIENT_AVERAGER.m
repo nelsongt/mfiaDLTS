@@ -1,8 +1,4 @@
 function [averagedTransient] = MFIA_TRANSIENT_AVERAGER(capArray,SR,TrnsLength)
-
-%TrnsLength = 8;
-%SR = 837.1;
-%capArray = sampleCap;
 %**************************************************************************
 %   DLTS_TRANSIENT_PREPARATION
 %   Author: Antonio Braga, Zurich Instruments
