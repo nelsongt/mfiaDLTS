@@ -1,4 +1,4 @@
-function [averagedTransient] = MFIA_TRANSIENT_AVERAGER(capArray,SR,TrnsLength)
+function [averagedTransient] = MFIA_TRANSIENT_AVERAGER_POLL(capArray,SR,TrnsLength)
 %**************************************************************************
 %   DLTS_TRANSIENT_PREPARATION
 %   Author: Antonio Braga, Zurich Instruments

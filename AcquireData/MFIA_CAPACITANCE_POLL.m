@@ -1,4 +1,4 @@
-function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_ACQ(device,saveTime)
+function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(device,saveTime,acFreq)
 
 
 %% J.Wei Zurich Instruments May 19, 2015
@@ -12,7 +12,9 @@ function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_ACQ(device,saveTim
 %                                                                        %
 % Example: [timestamp, DIOBitVal, sampleX, sampleY] = DLTS_TRANSIENT_SAVE(57600,3e-6,10)           
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+  
+  % Oscillator settings
+  ziDAQ('setDouble', ['/' device '/imps/0/freq'], acFreq);  % Here for YSpec
 
   % Unsubscribe all streaming data
   ziDAQ('unsubscribe','*');

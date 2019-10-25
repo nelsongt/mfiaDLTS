@@ -27,9 +27,13 @@ addpath(genpath('.\LabOneMatlab-18.05.53868'))
 ziAddPath % ZI instrument driver
 
 %% MAIN %%
+% Check for and initialize lakeshore 331
 if LAKESHORE_INIT()==0
     return;
 end
+% Check for and initialize MFIA
+device = MFIA_INIT(sample_rate,time_constant,ss_bias,p_height,ac_freq_start,ac_ampl);
+
 
 freqs = logspace(log10(ac_freq_start),log10(ac_freq_final),ac_freq_steps);
 current_temp = temp_init;
@@ -39,7 +43,7 @@ while current_num <= steps
     cprintf('blue', 'Waiting for set point (%3.2f)...\n',current_temp);
     SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
     for i=1:length(freqs)
-        [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_ACQ(sample_rate,time_constant,ss_bias,freqs(i),ac_ampl,sample_time);
+        [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(sample_rate,sample_time,freqs(i));
         avg_G(i) = 1 / mean(sampleRes);
         avg_C(i) = mean(sampleCap);
         omega(i) = 2*pi()*freqs(i);

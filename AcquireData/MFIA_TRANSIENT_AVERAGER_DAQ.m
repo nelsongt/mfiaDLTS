@@ -1,4 +1,4 @@
-function [averagedTransient] = MFIA_TRANSIENT_AVERAGER(capArray,SR,TrnsLength)
+function [averagedTransient] = MFIA_TRANSIENT_AVERAGER_DAQ(capArray,SR,TrnsLength)
 %capArray = sampleCap;
 %SR = sample_rate;
 %TrnsLength = sample_period-pulse_width;
@@ -59,9 +59,4 @@ ax2 = axes('Position',ax1.Position,...
     'ytick',[]);
 ax2.XLabel.String = 'Time (s)';
 hold off;
-end
-
-function C = sortBlikeA(A,B)
-    [~,Asort]=sort(A,'descend'); %Get the order of B
-    C=B(Asort);
 end

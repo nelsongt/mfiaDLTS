@@ -1,4 +1,4 @@
-function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_ACQtemp(deviceId,sampleTime,transientLength)
+function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_DAQ(deviceId,sampleTime,transientLength)
 %deviceId='dev3327';
 %sampleTime=10;
 %transientLength=0.15;
@@ -75,7 +75,7 @@ while transferNotFinished && toc(t0) < timeout
             end
             sampleCap = [sampleCap; capData];
         end
-        fprintf('Acquired %d of total %d transients: %.1f%% (elapsed time %.3f s).\n', total_triggers, trigger_count, 100*ziDAQ('progress', h),toc(t0));
+        cprintf('blue','Acquired %d of total %d transients: %.1f%% (elapsed time %.3f s)\n', total_triggers, trigger_count, 100*ziDAQ('progress', h),toc(t0));
         tRead = tic;
         transferNotFinished = ~ziDAQ('finished', h);
     end
@@ -89,8 +89,10 @@ if toc(t0) > timeout
       ziDAQ('clear', h);
       error('Trigger failure before timeout (%d seconds). Missing feedback cable between sigout 2 and trigin 1?', timeout);
    else
-      fprintf('Only acquired %d transients. Operation timed out (%.2f s) before acquiring %d transients. Check settings.\n', total_triggers, timeout, trigger_count);
+      cprintf('red','Only acquired %d transients. Operation timed out (%.2f s) before acquiring %d transients. Check settings.\n', total_triggers, timeout, trigger_count);
    end
+else
+    cprintf('green','Done.\n');
 end
 
 ziDAQ('unsubscribe', h, ['/' deviceId '/imps/0/sample'])

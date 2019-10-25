@@ -1,4 +1,4 @@
-function device = MFIA_INIT(Fs, timeConstant, ssBias, pBias, acFreq, acAmplitude)
+function device = MFIA_INITtemp(Fs, timeConstant, ssBias, pBias, acFreq, acAmplitude)
 
 
 %% MFIA Initialization, George Nelson Oct 2019
@@ -8,8 +8,8 @@ function device = MFIA_INIT(Fs, timeConstant, ssBias, pBias, acFreq, acAmplitude
   
   %% Open connection to the ziServer (socket for sync interface)
   %ziDAQ('connect', '192.168.51.254', 8004, 5);
-  %ziDAQ ('connect','127.0.0.1',8004,6);
-  ziDAQ ('connect','169.254.40.222',8004,5);
+  ziDAQ ('connect','127.0.0.1',8004,6);
+  %ziDAQ ('connect','169.254.40.222',8004,5);
   % Get device name automagically (e.g. 'dev234')
   device = autoDetect();
   % or specify manually
@@ -63,11 +63,21 @@ function device = MFIA_INIT(Fs, timeConstant, ssBias, pBias, acFreq, acAmplitude
   ziDAQ('setInt', ['/' device '/sigouts/0/add'], 1);
   ziDAQ('setDouble', ['/' device '/sigouts/0/offset'], ssBias);
   ziDAQ('setInt', ['/' device '/tu/thresholds/0/input'], 59);
+  ziDAQ('setInt', ['/' device '/tu/thresholds/1/input'], 59);
+  ziDAQ('setInt', ['/' device '/tu/thresholds/0/inputchannel'], 0);
+  ziDAQ('setInt', ['/' device '/tu/thresholds/1/inputchannel'], 0);
   ziDAQ('setInt', ['/' device '/tu/logicunits/0/inputs/0/not'], 1);
+  ziDAQ('setInt', ['/' device '/tu/logicunits/1/inputs/0/not'], 0);
   ziDAQ('setDouble', ['/' device '/tu/thresholds/0/deactivationtime'], 0.151);
   ziDAQ('setDouble', ['/' device '/tu/thresholds/0/activationtime'], 0.01);
+  ziDAQ('setDouble', ['/' device '/tu/thresholds/1/deactivationtime'], 0.151);
+  ziDAQ('setDouble', ['/' device '/tu/thresholds/1/activationtime'], 0.01);
   ziDAQ('setInt', ['/' device '/auxouts/0/outputselect'], 13);
+  ziDAQ('setInt', ['/' device '/auxouts/1/outputselect'], 13);
   ziDAQ('setDouble', ['/' device '/auxouts/0/scale'], pBias);
+  ziDAQ('setDouble', ['/' device '/auxouts/0/offset'], 0);
+  ziDAQ('setDouble', ['/' device '/auxouts/1/scale'], -1.0);
+  ziDAQ('setDouble', ['/' device '/auxouts/1/offset'], 1.0);
   
   % Data stream settings
   ziDAQ('setDouble', ['/' device '/imps/0/demod/rate'], Fs);

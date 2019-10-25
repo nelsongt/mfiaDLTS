@@ -37,7 +37,7 @@ ziAddPath % ZI instrument driver load
 %    return;
 %end
 % Check for and initialize MFIA
-device = MFIA_INITtemp(sample_rate,time_constant,ss_bias,p_height,ac_freq,ac_ampl);
+device = MFIA_INIT(sample_rate,time_constant,ss_bias,p_height,ac_freq,ac_ampl);
 
 
 current_temp = temp_init;
@@ -49,12 +49,14 @@ while current_num <= steps
     
     cprintf('blue', 'Capturing transient...\n');
     temp_before = sampleSpaceTemperature;
-    [timestamp, sampleCap] = MFIA_CAPACITANCE_ACQ_DAQtemp(device,sample_time,sample_period-pulse_width);
+    %[timestamp, sampleCap] = MFIA_CAPACITANCE_POLL(device,sample_time,ac_freq);
+    [timestamp, sampleCap] = MFIA_CAPACITANCE_DAQ(device,sample_time,sample_period-pulse_width);
     temp_after = sampleSpaceTemperature;
     cprintf('green', 'Finished transient for this temperature.\n');
     avg_temp = (temp_before + temp_after) / 2;
     
-    avg_trnst = MFIA_TRANSIENT_AVERAGERtemp(sampleCap,sample_rate,sample_period-pulse_width);
+    %avg_trnst = MFIA_TRANSIENT_AVERAGER_POLL(sampleCap,sample_rate,sample_period-pulse_width);
+    avg_trnst = MFIA_TRANSIENT_AVERAGER_DAQ(sampleCap,sample_rate,sample_period-pulse_width);
     
     cprintf('blue', 'Saving transient...\n');
     TRANSIENT_FILE(save_folder,strcat(sample_name,'_',num2str(current_num),'_',num2str(current_temp),'.iso'),avg_trnst,sample_rate,avg_temp,sample_comment);
