@@ -7,20 +7,13 @@ function device = MFIA_INITtemp(Fs, timeConstant, ssBias, pBias, acFreq, acAmpli
   device = 0;
   
   %% Open connection to the ziServer (socket for sync interface)
-  %ziDAQ('connect', '192.168.51.254', 8004, 5);
-  ziDAQ ('connect','127.0.0.1',8004,6);
+  ziDAQ ('connect','127.0.0.1',8004,6);    % Use local data server for best performance
   %ziDAQ ('connect','169.254.40.222',8004,5);
   % Get device name automagically (e.g. 'dev234')
   device = autoDetect();
   % or specify manually
   %device = 'dev3327';
-  
-  %% Configure the MFIA (assumes SigIn 0 connected to SigOut 0)
-  %ziDAQ('set', h, 'deviceSettings/command', 'load_none');
-  %ziDAQ('set', h, 'deviceSettings/command', 'load');
-  %ziDAQ('set', h, 'deviceSettings/filename', 'dlts2');
-  %ziDAQ('set', h, 'deviceSettings/throwonerror', 0);
-  %ziDAQ('execute', h);
+
   
   % Enable IA module
   ziDAQ('setInt', ['/' device '/imps/0/enable'], 1);
@@ -29,8 +22,7 @@ function device = MFIA_INITtemp(Fs, timeConstant, ssBias, pBias, acFreq, acAmpli
   vrange = 10;
   irange = 0.0001;
   phase_offset = 0;
-  
-  
+    
   % Setup IA module  
   ziDAQ('setInt', ['/' device '/imps/0/mode'], 1);
   ziDAQ('setInt', ['/' device '/system/impedance/filter'], 1);
@@ -60,7 +52,11 @@ function device = MFIA_INITtemp(Fs, timeConstant, ssBias, pBias, acFreq, acAmpli
   % Output settings
   ziDAQ('setDouble', ['/' device '/imps/0/output/range'], vrange);
   ziDAQ('setInt', ['/' device '/imps/0/output/on'], 1);
-  ziDAQ('setInt', ['/' device '/sigouts/0/add'], 1);
+  if pBias  % Check if a pulse bias is set, if so add to ss bias
+    ziDAQ('setInt', ['/' device '/sigouts/0/add'], 1);
+  else
+    ziDAQ('setInt', ['/' device '/sigouts/0/add'], 0);
+  end
   ziDAQ('setDouble', ['/' device '/sigouts/0/offset'], ssBias);
   ziDAQ('setInt', ['/' device '/tu/thresholds/0/input'], 59);
   ziDAQ('setInt', ['/' device '/tu/thresholds/1/input'], 59);

@@ -1,19 +1,20 @@
 %%% MFIA Admittance Spectroscopy %%%  Author: George Nelson 2019
 
 % Set MFIA Parameters
-time_constant = 2.4e-3; % us, lock in time constant, GN suggests 2.4e-6
-ss_bias = -4.0;          % V, steady-state voltage bias
-ac_freq_start = 300;   % Hz, start lock in AC frequency, GN suggests ~100Hz
-ac_freq_final = 5e6;    % Hz, final frequency, GN suggests 5MHz (MFIA limit)
-ac_freq_steps = 150;    % Frequency step size on the log-scale
-ac_ampl = 0.1;         % V, lock in AC amplitude, GN suggests 50 mV
-sample_rate = 53571;    % Hz, sampling rate Hz, for CDLTS use 53571 or 107143 (MFIA half and full data rate, full is better but maybe not reliable)
-sample_time = 10;       % sec, length to sample each temp point, determines speed of scan
+time_constant = 2.4e-3;  % us, lock in time constant, GN suggests 2.4e-6
+ss_bias = -0.2;          % V, steady-state voltage bias
+p_height = 0.0;          % V, has to be zero for YSpec, don't change this
+ac_freq_start = 300;     % Hz, start lock in AC frequency, GN suggests ~100Hz
+ac_freq_final = 5e6;     % Hz, final frequency, GN suggests 5MHz (MFIA limit)
+ac_freq_steps = 150;     % Frequency step size on the log-scale
+ac_ampl = 0.1;           % V, lock in AC amplitude, GN suggests 50 mV
+sample_rate = 53571;     % Hz, sampling rate Hz, for CDLTS use 53571 or 107143 (MFIA half and full data rate, full is better but maybe not reliable)
+sample_time = 10;        % sec, length to sample each temp point, determines speed of scan
 
 % Set YSpec experiment parameters
 sample_name = '19R108 G3R1a1';
-sample_comment = '-4.0V';
-save_folder = strcat(sample_name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
+sample_comment = '-0.2V';
+save_folder = strcat('.\data\',sample_name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
 temp_init = 160;         % K, Initial temperature
 temp_step = 10;         % K, Temperature step size
 temp_final = 50;       % K, Ending temperature
@@ -23,14 +24,14 @@ time_stability = 10;    % s, How long must temperature be stable before collecti
 
 % Setup PATH
 addpath(genpath('.\lakeshore'))
-addpath(genpath('.\LabOneMatlab-18.05.53868'))
+addpath(genpath('.\LabOneMatlab'))
 ziAddPath % ZI instrument driver
 
 %% MAIN %%
 % Check for and initialize lakeshore 331
-if LAKESHORE_INIT()==0
-    return;
-end
+%if LAKESHORE_INIT()==0
+%    return;
+%end
 % Check for and initialize MFIA
 device = MFIA_INIT(sample_rate,time_constant,ss_bias,p_height,ac_freq_start,ac_ampl);
 
@@ -41,9 +42,9 @@ current_num = 0;
 steps = ceil(abs(temp_init - temp_final)/temp_step);
 while current_num <= steps
     cprintf('blue', 'Waiting for set point (%3.2f)...\n',current_temp);
-    SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
+   % SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
     for i=1:length(freqs)
-        [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(sample_rate,sample_time,freqs(i));
+        [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(device,sample_time,freqs(i));
         avg_G(i) = 1 / mean(sampleRes);
         avg_C(i) = mean(sampleCap);
         omega(i) = 2*pi()*freqs(i);
