@@ -33,9 +33,9 @@ ziAddPath % ZI instrument driver load
 
 %% MAIN %%
 % Check for and initialize lakeshore 331
-%if LAKESHORE_INIT()==0
-%    return;
-%end
+if LAKESHORE_INIT()==0
+    return;
+end
 % Check for and initialize MFIA
 device = MFIA_INIT(sample_rate,time_constant,ss_bias,p_height,ac_freq,ac_ampl);
 
@@ -45,7 +45,7 @@ current_num = 0;
 steps = ceil(abs(temp_init - temp_final)/temp_step);
 while current_num <= steps
     cprintf('blue', 'Waiting for set point (%3.2f)...\n',current_temp);
-    %SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
+    SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
     
     cprintf('blue', 'Capturing transient...\n');
     temp_before = sampleSpaceTemperature;
