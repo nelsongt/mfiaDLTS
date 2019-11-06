@@ -43,12 +43,15 @@ Software Dependencies
 ------------
 
 General:
+
   MATLAB
   
 ProcessData:
+
   [optional,not included] ezyfit:  http://www.fast.u-psud.fr/ezyfit/
   
 AcquireData:
+
   [required, not included] LabOne: https://www.zhinst.com/downloads
   
   [required, not included] LabOne Matlab Driver (place in AcquireData folder): https://www.zhinst.com/downloads
