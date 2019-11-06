@@ -18,9 +18,13 @@ Requirements
 ------------
 
   -Device to perform DLTS on
+  
   -Cryostat with electrical leads for device connection
+  
   -Lakeshore temperature controller to control cryostat temperature
+  
   -Zurich Instruments MFIA
+  
   -PC with MATLAB to run this code
 
 
@@ -46,24 +50,34 @@ ProcessData:
   
 AcquireData:
   [required, not included] LabOne: https://www.zhinst.com/downloads
+  
   [required, not included] LabOne Matlab Driver (place in AcquireData folder): https://www.zhinst.com/downloads
+  
   [required, included] lakshore driver: https://www.mathworks.com/matlabcentral/fileexchange/48366-lakeshore
+  
   [required, included] cprintf: https://www.mathworks.com/matlabcentral/fileexchange/24093-cprintf-display-formatted-colored-text-in-the-command-window
   
 How To Use
 ------------
+-Updated for V0.9
 
 #### AcquireData
 
 To take data, make sure that the software dependencies are installed correctly. You will then need to wire the MFIA properly, for this I will make a wiring diagram in the future. In the meantime:
 
 -Connect sample leads to MFIA in 2-wire mode.
+
 -Connect a BNC cable from Aux Out 1 of MFIA to Aux Input 1. This is for pulse generation. See: https://www.zhinst.com/blogs/tim/2018/08/22/square-pulse-c-v-measurements-for-dlts-on-the-mfia/
--Connect ethernet cable from MFIA to PC.
 
-Open CDLTS_Main.m. In this file, you will setup the experiment variables like temperature range and temperature step and sample biasing and pulsing. You will also describe the sample with a name and other key parameters.
+-Connect a BCN cable from Aux Out 2 to Trigger In 1 (on back of MFIA). This is for hardware triggering. See: https://www.zhinst.com/blogs/tim/2018/12/19/gated-data-transfer-for-increased-data-sampling-rate-on-the-mfia-and-mfli/
 
-Once setup, start the program and the output will make sure the MFIA and the lakeshore are working. After that, the temperature will be stabilized at the first temp step. Once the temperature is stable, the MFIA will be configured for DLTS and then polled for data. The code currently polls constantly for data and the pulses are found in software using edge-finding code. Many transients will be recorded, defined by the sampling time and sampling period, and then averaged and the .iso file is saved to disk before moving to the next temperature.
+-Connect ethernet cable from MFIA to PC. PC and cable must be gigabit or better.
+
+-Open CDLTS_Main.m. In this file, you will setup the experiment variables like temperature range and temperature step and sample biasing and pulsing. You will also describe the sample with a name and other key parameters.
+
+Once setup, start the program and the output will make sure the MFIA and the lakeshore are working and configure them. After that, the temperature will be stabilized at the first temp step. Once the temperature is stable, the MFIA will be asked for data using its DAQ module. The code is setup to record data using a hardware trigger, where the voltage pulse is used as the trigger. Individual transients are recorded at the sampling rate for a length of time determined by the individual transient sampling period. The total number of transients recorded is determined by the sampling time, which is the total time you want to take data for each temperature point. Then, however many transients collected during that time are averaged. Finally, the averaged data is saved to disk before moving to the next temperature.
+
+The scan process in time is: Temp set point ----- wait for temperature of cryostate to reach set point -----  temperature set wait time ----- record transients for sampling time ---- write file to disk ---- new temp set point, start over
 
 *This code was initially inspired by software on the Zurich Instruments blogs.
 
