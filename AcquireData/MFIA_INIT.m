@@ -1,4 +1,4 @@
-function device = MFIA_INITtemp(Fs, timeConstant, ssBias, pBias, acFreq, acAmplitude)
+function device = MFIA_INITtemp(Fs, timeConstant, ssBias, pBias, acFreq, acAmplitude,fullPeriod,pulseWidth)
 
 
 %% MFIA Initialization, George Nelson Oct 2019
@@ -63,17 +63,19 @@ function device = MFIA_INITtemp(Fs, timeConstant, ssBias, pBias, acFreq, acAmpli
   ziDAQ('setInt', ['/' device '/tu/thresholds/0/inputchannel'], 0);
   ziDAQ('setInt', ['/' device '/tu/thresholds/1/inputchannel'], 0);
   ziDAQ('setInt', ['/' device '/tu/logicunits/0/inputs/0/not'], 1);
-  ziDAQ('setInt', ['/' device '/tu/logicunits/1/inputs/0/not'], 0);
-  ziDAQ('setDouble', ['/' device '/tu/thresholds/0/deactivationtime'], 0.151);
-  ziDAQ('setDouble', ['/' device '/tu/thresholds/0/activationtime'], 0.01);
-  ziDAQ('setDouble', ['/' device '/tu/thresholds/1/deactivationtime'], 0.151);
-  ziDAQ('setDouble', ['/' device '/tu/thresholds/1/activationtime'], 0.01);
+  ziDAQ('setInt', ['/' device '/tu/logicunits/1/inputs/0/not'], 1);
+  ziDAQ('setDouble', ['/' device '/tu/thresholds/0/deactivationtime'], fullPeriod-pulseWidth);
+  ziDAQ('setDouble', ['/' device '/tu/thresholds/0/activationtime'], pulseWidth);
+  ziDAQ('setDouble', ['/' device '/tu/thresholds/1/deactivationtime'], 0);
+  ziDAQ('setDouble', ['/' device '/tu/thresholds/1/activationtime'], 0);
   ziDAQ('setInt', ['/' device '/auxouts/0/outputselect'], 13);
   ziDAQ('setInt', ['/' device '/auxouts/1/outputselect'], 13);
+  ziDAQ('setInt', ['/' device '/auxouts/0/demodselect'], 0);
+  ziDAQ('setInt', ['/' device '/auxouts/1/demodselect'], 1);
   ziDAQ('setDouble', ['/' device '/auxouts/0/scale'], pBias);
   ziDAQ('setDouble', ['/' device '/auxouts/0/offset'], 0);
-  ziDAQ('setDouble', ['/' device '/auxouts/1/scale'], -1.0);
-  ziDAQ('setDouble', ['/' device '/auxouts/1/offset'], 1.0);
+  ziDAQ('setDouble', ['/' device '/auxouts/1/scale'], -5.0);
+  ziDAQ('setDouble', ['/' device '/auxouts/1/offset'], 5.0);
   
   % Data stream settings
   ziDAQ('setDouble', ['/' device '/imps/0/demod/rate'], Fs);

@@ -1,65 +1,80 @@
 %%%% MFIA CDLTS %%%%  Author:  George Nelson 2019
 
-%% Init %%
+%%% Init %%%
 % Set sample info
-sample_name = '19R107 G3R1b1';
-sample_comment = '-3.3. to +0.5 60s 1.0MHz 100mV 4rej';
-save_folder = strcat('.\data\',sample_name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
-cv_doping = 1e15;       % 1/cm^3, TODO
+sample.user = 'George';
+sample.material = 'In0.53Ga0.47As';
+sample.name = '19R107 G3R1b1';
+sample.area = '0.25';  % mm^2
+sample.comment = '-3.3. to +0.5 60s 1.0MHz 100mV 4rej';
+sample.save_folder = strcat('.\data\',sample_name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
 
-% Set MFIA Parameters
-time_constant = 2.4e-6; % us, lock in time constant, GN suggests 2.4e-6
-ac_freq = 1.0e6;        % Hz, lock in AC frequency, GN suggests 1MHz
-ac_ampl = 0.10;         % V, lock in AC amplitude, GN suggests ~100 mV for good SNR
-sample_rate = 107143;   % Hz, sampling rate Hz, for CDLTS use 53571 or 107143 (MFIA half and full data rate, full is better but maybe not reliable)
-sample_time = 15;       % sec, length to sample each temp point, determines speed of scan and SNR
-ss_bias = -1.2;         % V, steady-state bias
-p_height = 1.0;		    % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
+%cv_doping = 1e15;       % 1/cm^3, TODO
 
 % Set DLTS experiment parameters
-sample_period = 0.160;  % s, length of single experiment in time
-pulse_width = 0.01;     % s, length of pulse in time
-temp_init = 200;        % K, Initial DLTS temperature
-temp_step = 0.5;        % K, Capture transient each temp step
-temp_final = 50;        % K, DLTS ending temperature
-temp_idle = 300;        % K, Temp to set after experiment is over
-temp_stability = 0.1;   % K, Sets how close to the setpoint the temperature must be before collecting data (set point +- stability)
-time_stability = 10;    % s, How long must temperature be within temp_stability before collecting data, tests if PID settings overshoot set point, also useful if actual sample temp lags sensor temp
+mfia.sample_time = 60;     % sec, length to sample each temp point, determines speed of scan and SNR
+mfia.ss_bias = -1.2;       % V, steady-state bias
+mfia.pulse_height = 1.0;	   % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
+mfia.full_period = 0.161;  % s, length of single experiment in time (must be longer than trns_length+pulse_width)
+mfia.trns_length = 0.150;  % s, amount of transient sampled and saved
+mfia.pulse_width = 0.01;   % s, length of pulse in time
+
+% Set temperature parameters
+temp_init = 200;           % K, Initial DLTS temperature
+temp_step = 0.5;           % K, Capture transient each temp step
+temp_final = 50;           % K, DLTS ending temperature
+temp_idle = 300;           % K, Temp to set after experiment is over
+temp_stability = 0.1;      % K, Sets how close to the setpoint the temperature must be before collecting data (set point +- stability)
+time_stability = 10;       % s, How long must temperature be within temp_stability before collecting data, tests if PID settings overshoot set point, also useful if actual sample temp lags sensor temp
+
+% Set MFIA Parameters
+mfia.time_constant = 2.4e-6; % us, lock in time constant, GN suggests 2.4e-6
+mfia.ac_freq = 1.0e6;        % Hz, lock in AC frequency, GN suggests 1MHz
+mfia.ac_ampl = 0.10;         % V, lock in AC amplitude, GN suggests ~100 mV for good SNR
+mfia.sample_rate = 107143;   % Hz, sampling rate Hz, for CDLTS use 53571 or 107143 or 214286
 
 % Setup PATH
-addpath(genpath('.\lakeshore'))					 % point to lakeshore driver
-addpath(genpath('.\LabOneMatlab'))               % point to LabOneMatlab drivers
+addpath(genpath('.\lakeshore'))		% point to lakeshore driver
+addpath(genpath('.\LabOneMatlab'))  % point to LabOneMatlab drivers
 ziAddPath % ZI instrument driver load
 
-%% MAIN %%
+%%% END INIT %%%
+
+%%% MAIN %%%
 % Check for and initialize lakeshore 331
 if LAKESHORE_INIT()==0
     return;
 end
 % Check for and initialize MFIA
-device = MFIA_INIT(sample_rate,time_constant,ss_bias,p_height,ac_freq,ac_ampl);
+device = MFIA_INIT(mfia);
 
-
+% Main loop
 current_temp = temp_init;
 current_num = 0;
 steps = ceil(abs(temp_init - temp_final)/temp_step);
 while current_num <= steps
     cprintf('blue', 'Waiting for set point (%3.2f)...\n',current_temp);
-    SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
+    SET_TEMP(current_temp,temp); % Wait for lakeshore to reach set temp;
     
     cprintf('blue', 'Capturing transient...\n');
     temp_before = sampleSpaceTemperature;
-    %[timestamp, sampleCap] = MFIA_CAPACITANCE_POLL(device,sample_time,ac_freq);
-    [timestamp, sampleCap] = MFIA_CAPACITANCE_DAQ(device,sample_time,sample_period-pulse_width);
+    %[timestamp, sampleCap] = MFIA_CAPACITANCE_POLL(device,mfia);
+    [timestamp, sampleCap] = MFIA_CAPACITANCE_DAQ(device,mfia);
     temp_after = sampleSpaceTemperature;
     cprintf('green', 'Finished transient for this temperature.\n');
     avg_temp = (temp_before + temp_after) / 2;
     
-    %avg_trnst = MFIA_TRANSIENT_AVERAGER_POLL(sampleCap,sample_rate,sample_period-pulse_width);
-    avg_trnst = MFIA_TRANSIENT_AVERAGER_DAQ(sampleCap,sample_rate,sample_period-pulse_width);
+    % Find the amount of data loss, if more than a few percent lower duty cycle or lower sampling rate
+    dataloss = sum(sum(isnan(sampleCap)))/(size(sampleCap,1)*size(sampleCap,2));
+    if dataloss
+        cprintf('systemcommands', 'Warning: %1.1f%% data loss detected.\n',100*dataloss);
+    end
+    
+    %avg_trnst = MFIA_TRANSIENT_AVERAGER_POLL(sampleCap,mfia);
+    avg_trnst = MFIA_TRANSIENT_AVERAGER_DAQ(sampleCap,mfia);
     
     cprintf('blue', 'Saving transient...\n');
-    TRANSIENT_FILE(save_folder,strcat(sample_name,'_',num2str(current_num),'_',num2str(current_temp),'.iso'),avg_trnst,sample_rate,avg_temp,sample_comment);
+    TRANSIENT_FILE(sample,mfia,current_num,current_temp,avg_temp,avg_trnst);
 
     if temp_init > temp_final
         current_temp = current_temp - temp_step;    % Changes +/- for up vs down scan
@@ -74,4 +89,4 @@ SET_TEMP(temp_idle,temp_stability,time_stability); % Wait for lakeshore to reach
 cprintf('green', 'All done.\n');
 
 
-%% END MAIN %%
+%%% END MAIN %%%

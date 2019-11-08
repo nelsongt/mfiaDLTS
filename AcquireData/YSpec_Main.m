@@ -33,7 +33,7 @@ ziAddPath % ZI instrument driver
 %    return;
 %end
 % Check for and initialize MFIA
-device = MFIA_INIT(sample_rate,time_constant,ss_bias,p_height,ac_freq_start,ac_ampl);
+device = MFIA_INIT(sample_rate,time_constant,ss_bias,p_height,ac_freq_start,ac_ampl,2,1);
 
 
 freqs = logspace(log10(ac_freq_start),log10(ac_freq_final),ac_freq_steps);

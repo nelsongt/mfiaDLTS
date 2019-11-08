@@ -34,7 +34,7 @@ ziDAQ('set', h, 'dataAcquisitionModule/triggernode', ['/' deviceId '/demods/0/sa
 %     POS_EDGE = 1
 %     NEG_EDGE = 2
 %     BOTH_EDGE = 3
-ziDAQ('set', h, 'dataAcquisitionModule/edge', 1)
+ziDAQ('set', h, 'dataAcquisitionModule/edge', 2)
 ziDAQ('set', h, 'dataAcquisitionModule/grid/cols', sample_count);
 ziDAQ('set', h, 'dataAcquisitionModule/grid/rows', 1);
 ziDAQ('set', h, 'dataAcquisitionModule/holdoff/time', 0.0);
@@ -49,12 +49,12 @@ ziDAQ('subscribe', h, ['/' deviceId '/imps/0/sample.param1']);
 % now start the thread -> ready to be triggered
 ziDAQ('execute', h);
 
-timeout = 1.5*sampleTime; % [s]
+timeout = 1.2*sampleTime; % [s]
 total_triggers = 0;
 sampleCap = [];
 t0 = tic;
 tRead = tic;
-dt_read = 2;
+dt_read = 2.0;
 transferNotFinished = ~ziDAQ('finished', h);
 while transferNotFinished && toc(t0) < timeout
     pause(0.05);
@@ -89,7 +89,7 @@ if toc(t0) > timeout
       ziDAQ('clear', h);
       error('Trigger failure before timeout (%d seconds). Missing feedback cable between sigout 2 and trigin 1?', timeout);
    else
-      cprintf('red','Only acquired %d transients. Operation timed out (%.2f s) before acquiring %d transients. Check settings.\n', total_triggers, timeout, trigger_count);
+      cprintf('systemcommands','Warning: Only acquired %d transients. Operation timed out (%.2f s) before acquiring %d transients.\n', total_triggers, timeout, trigger_count);
    end
 else
     cprintf('green','Done.\n');

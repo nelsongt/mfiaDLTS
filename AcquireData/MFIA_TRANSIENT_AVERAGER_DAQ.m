@@ -7,7 +7,7 @@ function [averagedTransient] = MFIA_TRANSIENT_AVERAGER_DAQ(capArray,SR,TrnsLengt
 capArray_pF = capArray*1e12;
 transients = size(capArray_pF,1);
 numSamples = size(capArray_pF,2);  %length of transient in data points
-rejectSamples = 5;  %length of hardware recovery in data points, generally first 80-100 usec of data if using George's suggested MFIA settings
+rejectSamples = 4;  %length of hardware recovery in data points, generally first 80-100 usec of data if using George's suggested MFIA settings
 realNumSamp = numSamples - rejectSamples;
 time = linspace(1/SR,(1/SR)*realNumSamp,realNumSamp);
 
