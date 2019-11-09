@@ -1,4 +1,4 @@
-*To Download: Go to releases page, current version is v0.9.1 beta. Main code is not always in a working state.
+**To Download**: Go to [releases page](https://github.com/nelsongt/mfiaDLTS/releases), current version is v0.9.1 beta. Master brance is not always in a working state.
 
 Introduction
 ------------
