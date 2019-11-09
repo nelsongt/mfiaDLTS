@@ -1,4 +1,6 @@
-Introduction
+To Download: Go to releases page, current version is v0.9.1 beta. Main code is not always in a working state.
+
+ntroduction
 ------------
 
 This is a collection of tools I have developed over the course of my PhD for performing Deep Level Transient Spectroscopy (DLTS) using a Zurich Instruments MFIA. The tools are not in the most user friendly state, but this code is the most complete open-source DLTS implementation that I am aware of. I will continue to update the tools as they are actively used at the RIT lab.
