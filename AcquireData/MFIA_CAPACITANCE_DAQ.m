@@ -1,4 +1,4 @@
-function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_DAQ(deviceId,sampleTime,transientLength)
+function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_DAQ(deviceId,mfia)
 %deviceId='dev3327';
 %sampleTime=10;
 %transientLength=0.15;
@@ -22,8 +22,8 @@ h = ziDAQ('dataAcquisitionModule');
 %% Configure the Data Acquisition Module
 % Device on which trigger will be performed
 sample_rate = ziDAQ('getDouble', ['/' deviceId '/imps/0/demod/rate']);
-trigger_count = ceil(0.9*sampleTime/transientLength);
-sample_count = sample_rate*transientLength;
+trigger_count = ceil(0.9*mfia.sample_time/mfia.trns_length);
+sample_count = sample_rate*mfia.trns_length;
 ziDAQ('set', h, 'dataAcquisitionModule/device', deviceId)
 ziDAQ('set', h, 'dataAcquisitionModule/count', trigger_count);
 ziDAQ('set', h, 'dataAcquisitionModule/endless', 0);
@@ -49,7 +49,7 @@ ziDAQ('subscribe', h, ['/' deviceId '/imps/0/sample.param1']);
 % now start the thread -> ready to be triggered
 ziDAQ('execute', h);
 
-timeout = 1.2*sampleTime; % [s]
+timeout = 1.2*mfia.sample_time; % [s]
 total_triggers = 0;
 sampleCap = [];
 t0 = tic;
@@ -62,7 +62,7 @@ while transferNotFinished && toc(t0) < timeout
     % not acculmulated in the module - it is cleared, so that the next time
     % you do a read you (should) only get the triggers that came inbetween the
     % two reads.
-    if toc(tRead) > dt_read
+    if toc(tRead) > dt_read 
         data = ziDAQ('read', h);
         if ziCheckPathInData(data, ['/' deviceId '/imps/0/sample_param1'])
             loop_triggers = length(data.(deviceId).imps(1).sample_param1);

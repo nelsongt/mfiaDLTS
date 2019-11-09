@@ -1,4 +1,4 @@
-function device = MFIA_INITtemp(Fs, timeConstant, ssBias, pBias, acFreq, acAmplitude,fullPeriod,pulseWidth)
+function device = MFIA_INITtemp(mfia)
 
 
 %% MFIA Initialization, George Nelson Oct 2019
@@ -42,43 +42,43 @@ function device = MFIA_INITtemp(Fs, timeConstant, ssBias, pBias, acFreq, acAmpli
   ziDAQ('setInt', ['/' device '/imps/0/demod/order'], 8);
   ziDAQ('setInt', ['/' device '/imps/0/auto/bw'], 0);
   ziDAQ('setDouble', ['/' device '/demods/0/phaseshift'], phase_offset);
-  ziDAQ('setDouble', ['/' device '/imps/0/demod/timeconstant'], timeConstant);
+  ziDAQ('setDouble', ['/' device '/imps/0/demod/timeconstant'], mfia.time_constant);
   ziDAQ('setDouble', ['/' device '/imps/0/demod/harmonic'], 1);
     
   % Oscillator settings
-  ziDAQ('setDouble', ['/' device '/imps/0/freq'], acFreq);
-  ziDAQ('setDouble', ['/' device '/imps/0/output/amplitude'], acAmplitude);
+  ziDAQ('setDouble', ['/' device '/imps/0/freq'], mfia.ac_freq);
+  ziDAQ('setDouble', ['/' device '/imps/0/output/amplitude'], mfia.ac_ampl);
   
   % Output settings
   ziDAQ('setDouble', ['/' device '/imps/0/output/range'], vrange);
   ziDAQ('setInt', ['/' device '/imps/0/output/on'], 1);
-  if pBias  % Check if a pulse bias is set, if so add to ss bias
+  if mfia.pulse_height  % Check if a pulse bias is set, if so add to ss bias
     ziDAQ('setInt', ['/' device '/sigouts/0/add'], 1);
   else
     ziDAQ('setInt', ['/' device '/sigouts/0/add'], 0);
   end
-  ziDAQ('setDouble', ['/' device '/sigouts/0/offset'], ssBias);
+  ziDAQ('setDouble', ['/' device '/sigouts/0/offset'], mfia.ss_bias);
   ziDAQ('setInt', ['/' device '/tu/thresholds/0/input'], 59);
   ziDAQ('setInt', ['/' device '/tu/thresholds/1/input'], 59);
   ziDAQ('setInt', ['/' device '/tu/thresholds/0/inputchannel'], 0);
   ziDAQ('setInt', ['/' device '/tu/thresholds/1/inputchannel'], 0);
   ziDAQ('setInt', ['/' device '/tu/logicunits/0/inputs/0/not'], 1);
   ziDAQ('setInt', ['/' device '/tu/logicunits/1/inputs/0/not'], 1);
-  ziDAQ('setDouble', ['/' device '/tu/thresholds/0/deactivationtime'], fullPeriod-pulseWidth);
-  ziDAQ('setDouble', ['/' device '/tu/thresholds/0/activationtime'], pulseWidth);
+  ziDAQ('setDouble', ['/' device '/tu/thresholds/0/deactivationtime'], mfia.full_period-mfia.pulse_width);
+  ziDAQ('setDouble', ['/' device '/tu/thresholds/0/activationtime'], mfia.pulse_width);
   ziDAQ('setDouble', ['/' device '/tu/thresholds/1/deactivationtime'], 0);
   ziDAQ('setDouble', ['/' device '/tu/thresholds/1/activationtime'], 0);
   ziDAQ('setInt', ['/' device '/auxouts/0/outputselect'], 13);
   ziDAQ('setInt', ['/' device '/auxouts/1/outputselect'], 13);
   ziDAQ('setInt', ['/' device '/auxouts/0/demodselect'], 0);
   ziDAQ('setInt', ['/' device '/auxouts/1/demodselect'], 1);
-  ziDAQ('setDouble', ['/' device '/auxouts/0/scale'], pBias);
+  ziDAQ('setDouble', ['/' device '/auxouts/0/scale'], mfia.pulse_height);
   ziDAQ('setDouble', ['/' device '/auxouts/0/offset'], 0);
   ziDAQ('setDouble', ['/' device '/auxouts/1/scale'], -5.0);
   ziDAQ('setDouble', ['/' device '/auxouts/1/offset'], 5.0);
   
   % Data stream settings
-  ziDAQ('setDouble', ['/' device '/imps/0/demod/rate'], Fs);
+  ziDAQ('setDouble', ['/' device '/imps/0/demod/rate'], mfia.sample_rate);
   
 end
   

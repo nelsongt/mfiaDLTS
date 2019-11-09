@@ -6,15 +6,15 @@ sample.user = 'George';
 sample.material = 'In0.53Ga0.47As';
 sample.name = '19R107 G3R1b1';
 sample.area = '0.25';  % mm^2
-sample.comment = '-3.3. to +0.5 60s 1.0MHz 100mV 4rej';
-sample.save_folder = strcat('.\data\',sample_name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
+sample.comment = '30s 1.0MHz 100mV 4rej';
+sample.save_folder = strcat('.\data\',sample.name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
 
 %cv_doping = 1e15;       % 1/cm^3, TODO
 
 % Set DLTS experiment parameters
-mfia.sample_time = 60;     % sec, length to sample each temp point, determines speed of scan and SNR
+mfia.sample_time = 30;     % sec, length to sample each temp point, determines speed of scan and SNR
 mfia.ss_bias = -1.2;       % V, steady-state bias
-mfia.pulse_height = 1.0;	   % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
+mfia.pulse_height = 1.0;   % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
 mfia.full_period = 0.161;  % s, length of single experiment in time (must be longer than trns_length+pulse_width)
 mfia.trns_length = 0.150;  % s, amount of transient sampled and saved
 mfia.pulse_width = 0.01;   % s, length of pulse in time
@@ -54,7 +54,7 @@ current_num = 0;
 steps = ceil(abs(temp_init - temp_final)/temp_step);
 while current_num <= steps
     cprintf('blue', 'Waiting for set point (%3.2f)...\n',current_temp);
-    SET_TEMP(current_temp,temp); % Wait for lakeshore to reach set temp;
+    SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
     
     cprintf('blue', 'Capturing transient...\n');
     temp_before = sampleSpaceTemperature;

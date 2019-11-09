@@ -1,11 +1,11 @@
-function TRANSIENT_FILE(saveFolder,filename,transient,rate,temperature,comment)
+function TRANSIENT_FILE(sample,mfia,currentNum,setTemperature,avgTemperature,transient)
 %TransientFile Saves transient data to LDLTS compatible iso file
 %   Detailed explanation goes here
-fileName = strcat(sample_name,'_',num2str(current_num),'_',num2str(current_temp)
+fileName = strcat(sample.name,'_',num2str(currentNum),'_',num2str(setTemperature));
 fileDate = datestr(now,'dd-mm-yyyy  HH:MM');
 
-status = mkdir(strcat(pwd,'\',saveFolder));
-fid = fopen(fullfile(strcat(pwd,'\',saveFolder),filename),'wt');
+status = mkdir(strcat(pwd,'\',sample.save_folder));
+fid = fopen(fullfile(strcat(pwd,'\',sample.save_folder),fileName),'wt');
 fprintf(fid, '[general]\n');
 fprintf(fid, 'software=Laplace DLTS version 3.3.38\n');
 fprintf(fid, 'hardware=mfiaDLTS\n');
@@ -16,7 +16,7 @@ fprintf(fid, 'source=Laplace DLTS experiment\n');
 fprintf(fid, 'date=%s\n', fileDate);  
 fprintf(fid, 'data base=C:\\Path\\To\\Database.mdb\n');
 fprintf(fid, 'data name=%s\n', fileName);
-fprintf(fid, 'comment=%s\n', comment);
+fprintf(fid, 'comment=%s\n', sample.comment);
 fprintf(fid, '[sample]\n');
 fprintf(fid, 'Material=%s\n', sample.material);
 fprintf(fid, 'Identifier=%s\n', sample.name);
@@ -44,12 +44,12 @@ fprintf(fid, 'Extra Delay Value= .001\n');
 fprintf(fid, '[acquisition]\n');
 fprintf(fid, 'first sample= 0\n');
 fprintf(fid, 'last sample= %d\n', length(transient)-1);
-fprintf(fid, 'Sampling Rate= %d\n', rate);
+fprintf(fid, 'Sampling Rate= %d\n', mfia.sample_rate);
 fprintf(fid, 'No samples= %d\n', length(transient));
 fprintf(fid, 'No scans= 150\n');
 fprintf(fid, 'gain= 1\n');
 fprintf(fid, '[parameters]\n');
-fprintf(fid, 'Sampling Rate= %d\n', rate);
+fprintf(fid, 'Sampling Rate= %d\n', mfia.sample_rate);
 fprintf(fid, 'capacitance meter range= 300\n');
 fprintf(fid, 'bias=-.8\n');
 fprintf(fid, '1st Pulse Bias=-.3\n');
@@ -64,7 +64,7 @@ fprintf(fid, 'No scans= 150\n');  %TODO
 fprintf(fid, 'gain= 1\n');
 fprintf(fid, 'Bias Capacitance= 68.12258\n');
 fprintf(fid, 'CurrentTransient=off\n');
-fprintf(fid, 'temperature= %f\n', avgTemperature_);
+fprintf(fid, 'temperature= %f\n', avgTemperature);
 fprintf(fid, 'temperatureSet= %d\n', setTemperature);
 fprintf(fid, 'magnetic field= 0\n');
 fprintf(fid, 'pressure= 0\n');
@@ -78,4 +78,3 @@ for i=1:length(transient)
 end
 fclose(fid);
 end
-

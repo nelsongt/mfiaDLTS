@@ -1,9 +1,10 @@
-function [averagedTransient] = MFIA_TRANSIENT_AVERAGER_DAQ(capArray,SR,TrnsLength)
+function [averagedTransient] = MFIA_TRANSIENT_AVERAGER_DAQ(capArray,mfia)
 %capArray = sampleCap;
 %SR = sample_rate;
 %TrnsLength = sample_period-pulse_width;
 %   By George Nelson, Oct 2019
 
+SR = mfia.sample_rate;
 capArray_pF = capArray*1e12;
 transients = size(capArray_pF,1);
 numSamples = size(capArray_pF,2);  %length of transient in data points
