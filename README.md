@@ -1,3 +1,5 @@
+**To Download**: Go to [releases page](https://github.com/nelsongt/mfiaDLTS/releases), current version is v0.9.1-beta. Master branch is not always in a working state.
+
 Introduction
 ------------
 
@@ -44,7 +46,7 @@ Software Dependencies
 
 General:
 
-  MATLAB
+  MATLAB (with statistics and instrument control toolboxes)
   
 ProcessData:
 
@@ -62,7 +64,7 @@ AcquireData:
   
 How To Use
 ------------
--Updated for V0.9
+Updated for V0.9
 
 #### AcquireData
 
