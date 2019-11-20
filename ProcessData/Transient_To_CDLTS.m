@@ -8,7 +8,7 @@ expconst = (exp(-2)-1)/2;
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'C10S711_750kHzFull'
+Folder_Name = 'nBnRG5'
 %% File read code  % TODO: Clean up by moving to own function
 F_dir = strcat(Folder_Name, '\*_*.iso');
 F = dir(F_dir);
@@ -50,7 +50,7 @@ sampling_period = (1 / sampling_rate) * (length(Data{1,1}));
 
 %% Define list of rate windows           NOTE: May need to be changed depending on filter function
 %rate_window = logspace(log10(20),log10(110),10);  % auto generate a list
-rate_window = [20,50,100,200,500,1000,2000];  % suggested windows: 20,50,100,200,500,1000,2000,5000
+rate_window = [13,20,50,100,200,500,1000,2000];  % suggested windows: 20,50,100,200,500,1000,2000,5000
 %rate_window = [32,64,128,256];  % also a good list: 16,32,64,256,512,1024
 %rate_window = 50;                     % single rate good for plotting
 
@@ -60,8 +60,8 @@ del_cap_norm = zeros(length(rate_window),total);
 
 %% List of filter functions, one must be used and only one
 %[del_cap,del_cap_norm] = weightboxcar(Data,rate_window,sampling_rate,ss_caps,total);      %TODO: Find proper gating and timing, was this done?
-%[del_cap,del_cap_norm] = weightlockin(Data,rate_window,sampling_rate,ss_caps,total);
-[del_cap,del_cap_norm] = weightexp(Data,rate_window,sampling_rate,ss_caps,total,expconst); % Recommended for SNR
+[del_cap,del_cap_norm] = weightlockin(Data,rate_window,sampling_rate,ss_caps,total);
+%[del_cap,del_cap_norm] = weightexp(Data,rate_window,sampling_rate,ss_caps,total,expconst); % Recommended for SNR
 %[del_cap,del_cap_norm] = weightsine(Data,rate_window,sampling_rate,ss_caps,total);      
 %[del_cap,del_cap_norm] = weightcosine(Data,rate_window,sampling_rate,ss_caps,total);      % Recommended for resolution
 

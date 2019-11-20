@@ -4,33 +4,33 @@
 % Set sample info
 sample.user = 'George';
 sample.material = 'In0.53Ga0.47As';
-sample.name = '19R107 G3R1b1';
+sample.name = 'nBnRG';
 sample.area = '0.25';  % mm^2
-sample.comment = '30s 1.0MHz 100mV 4rej';
+sample.comment = '60s 1.0MHz 125mV 4rej';
 sample.save_folder = strcat('.\data\',sample.name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
 
 %cv_doping = 1e15;       % 1/cm^3, TODO
 
 % Set DLTS experiment parameters
-mfia.sample_time = 30;     % sec, length to sample each temp point, determines speed of scan and SNR
-mfia.ss_bias = -1.2;       % V, steady-state bias
-mfia.pulse_height = 1.0;   % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
-mfia.full_period = 0.161;  % s, length of single experiment in time (must be longer than trns_length+pulse_width)
-mfia.trns_length = 0.150;  % s, amount of transient sampled and saved
+mfia.sample_time = 60;     % sec, length to sample each temp point, determines speed of scan and SNR
+mfia.ss_bias = -7.0;       % V, steady-state bias
+mfia.pulse_height = 3.0;   % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
+mfia.full_period = 0.181;  % s, length of single experiment in time (must be longer than trns_length+pulse_width)
+mfia.trns_length = 0.170;  % s, amount of transient sampled and saved
 mfia.pulse_width = 0.01;   % s, length of pulse in time
 
 % Set temperature parameters
-temp_init = 200;           % K, Initial DLTS temperature
+temp_init = 201.0;           % K, Initial DLTS temperature
 temp_step = 0.5;           % K, Capture transient each temp step
-temp_final = 50;           % K, DLTS ending temperature
-temp_idle = 300;           % K, Temp to set after experiment is over
+temp_final = 300;           % K, DLTS ending temperature
+temp_idle = 200;           % K, Temp to set after experiment is over
 temp_stability = 0.1;      % K, Sets how close to the setpoint the temperature must be before collecting data (set point +- stability)
 time_stability = 10;       % s, How long must temperature be within temp_stability before collecting data, tests if PID settings overshoot set point, also useful if actual sample temp lags sensor temp
 
 % Set MFIA Parameters
 mfia.time_constant = 2.4e-6; % us, lock in time constant, GN suggests 2.4e-6
 mfia.ac_freq = 1.0e6;        % Hz, lock in AC frequency, GN suggests 1MHz
-mfia.ac_ampl = 0.10;         % V, lock in AC amplitude, GN suggests ~100 mV for good SNR
+mfia.ac_ampl = 0.125;         % V, lock in AC amplitude, GN suggests ~100 mV for good SNR
 mfia.sample_rate = 107143;   % Hz, sampling rate Hz, for CDLTS use 53571 or 107143 or 214286
 
 % Setup PATH

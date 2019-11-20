@@ -1,7 +1,7 @@
 function TRANSIENT_FILE(sample,mfia,currentNum,setTemperature,avgTemperature,transient)
 %TransientFile Saves transient data to LDLTS compatible iso file
 %   Detailed explanation goes here
-fileName = strcat(sample.name,'_',num2str(currentNum),'_',num2str(setTemperature));
+fileName = strcat(sample.name,'_',num2str(currentNum),'_',num2str(setTemperature),'.iso');
 fileDate = datestr(now,'dd-mm-yyyy  HH:MM');
 
 status = mkdir(strcat(pwd,'\',sample.save_folder));
