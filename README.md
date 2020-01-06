@@ -80,7 +80,7 @@ To take data, make sure that the software dependencies are installed correctly. 
 
 -Open CDLTS_Main.m. In this file, you will setup the experiment variables like temperature range and temperature step and sample biasing and pulsing. You will also describe the sample with a name and other key parameters.
 
-Once setup, start the program and the output will make sure the MFIA and the lakeshore are working and configure them. After that, the temperature will be stabilized at the first temp step. Once the temperature is stable, the MFIA will be asked for data using its DAQ module. The code is setup to record data using a hardware trigger, where the voltage pulse is used as the trigger. Individual transients are recorded at the sampling rate for a length of time determined by the individual transient sampling period. The total number of transients recorded is determined by the sampling time, which is the total time you want to take data for each temperature point. Then, however many transients collected during that time are averaged. Finally, the averaged data is saved to disk before moving to the next temperature.
+Once setup, start the program and the output will make sure the MFIA and the lakeshore are working and configure them. After that, the temperature will be stabilized at the first temp step. Once the temperature is stable, the MFIA will be asked for data using its DAQ module. The code is setup to record data using a hardware trigger, where the voltage pulse is used as the trigger. Individual transients are recorded at the 'sampling rate' for a length of time determined by the 'individual transient sampling period'. The total number of transients recorded is determined by the 'sampling time', which is the total time you want to take data for each temperature point. Then, however many transients collected during that 'sampling time' are averaged. Finally, the averaged data is saved to disk before moving to the next temperature.
 
 The scan process in time is: Temp set point ----- wait for temperature of cryostate to reach set point -----  temperature set wait time ----- record transients for sampling time ---- write file to disk ---- new temp set point, start over
 
@@ -88,9 +88,9 @@ The scan process in time is: Temp set point ----- wait for temperature of cryost
 
 #### ProcessData
 
-After CDLTS_Main.m has collected all .iso files, take the generated data folder and move it from AcquireData to ProcessData. Then, open Transient_To_CDLTS.m and point the data folder to the folder that you just moved. It will go into that folder and process all the .iso files to generate a spectra.
+After CDLTS_Main.m has collected all .iso files, take the generated data folder and move it from AcquireData to ProcessData. Then, open Transient_To_CDLTS.m and point the data folder to the folder that you just moved. It will go into that folder and process all the .iso files to generate a spectrum.
 
-There are many complicated options in this file, such as choice of weighting function, that can be used by experts to tailor their processing. By default, the shifted exponential weighting function is used with rate windows from 20 Hz to 2000 Hz.
+There are many complicated options in this file, such as choice of weighting function, that can be used by experts to tailor their processing. By default, the rectangular (lock-in) weighting function is used with emission rate constants from 20 Hz to 2000 Hz.
 
 To extract the DLTS parameters, the matlab data cursor can be used on the plotted spectra to find the peaks. These peaks should be used to generate an Arrhenius plot. There is primitive support for doing this automatically, but it currently does not work well. You will have to generate most Arrhenius plots manually. This process can be understood by reading DLTSBackground.pdf.
 
@@ -98,7 +98,7 @@ To extract the DLTS parameters, the matlab data cursor can be used on the plotte
 
 To simulate DLTS, Transient_Sim.m can be used to generate transients for any number of traps. The trap characteristics (energy, cross-section, density) can be inputted in the simulator and these values should be recovered after processing the spectra. To create the conventional spectra from the simulated transients, use Transient_To_CDLTS.m. Take the generated transient files and place them in a folder in the ProcessData folder, then point Transient_To_CDLTS.m to that folder. Currently, the automated peak fitting is primitive, but creating the Arrhenius plots from the plotted spectra is simple to do manually.
 
-*This was originally developed by George Nelson of NanoPower Research Labs at Rochester Institute of Technology to be used in experiments funded by AF AEDC under SBIR# F151-173-0753*
+*Initially developed by George Nelson of NanoPower Research Labs at Rochester Institute of Technology to be used in experiments funded by AF AEDC under SBIR# F151-173-0753*
 
 
 
