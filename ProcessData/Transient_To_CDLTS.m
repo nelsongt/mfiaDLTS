@@ -8,7 +8,7 @@ expconst = (exp(-2)-1)/2;
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'nBnRG5'
+Folder_Name = 'nBnRG3_Rad3'
 %% File read code  % TODO: Clean up by moving to own function
 F_dir = strcat(Folder_Name, '\*_*.iso');
 F = dir(F_dir);
@@ -50,7 +50,7 @@ sampling_period = (1 / sampling_rate) * (length(Data{1,1}));
 
 %% Define list of rate windows           NOTE: May need to be changed depending on filter function
 %rate_window = logspace(log10(20),log10(110),10);  % auto generate a list
-rate_window = [13,20,50,100,200,500,1000,2000];  % suggested windows: 20,50,100,200,500,1000,2000,5000
+rate_window = [20,50,100,200,500,1000,2000];  % suggested windows: 20,50,100,200,500,1000,2000,5000
 %rate_window = [32,64,128,256];  % also a good list: 16,32,64,256,512,1024
 %rate_window = 50;                     % single rate good for plotting
 

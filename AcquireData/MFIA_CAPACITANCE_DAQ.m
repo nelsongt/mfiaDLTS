@@ -49,12 +49,12 @@ ziDAQ('subscribe', h, ['/' deviceId '/imps/0/sample.param1']);
 % now start the thread -> ready to be triggered
 ziDAQ('execute', h);
 
-timeout = 1.2*mfia.sample_time; % [s]
+timeout = 1.3*mfia.sample_time; % [s]
 total_triggers = 0;
 sampleCap = [];
 t0 = tic;
 tRead = tic;
-dt_read = 2.0;
+dt_read = 2.1;
 transferNotFinished = ~ziDAQ('finished', h);
 while transferNotFinished && toc(t0) < timeout
     pause(0.05);

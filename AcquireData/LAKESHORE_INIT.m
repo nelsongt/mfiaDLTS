@@ -9,8 +9,8 @@ end
     
 % Setup Lakeshore
 response = lakeshoreQuery('CSET?');
-if ~strcmp(response,'B,1,0,2')
-    lakeshoreQuery('CSET 1,B,1,0,2');   % Control loop 1, sensor B, in Kelvin (1), default heater off (0), heater units power (2)
+if ~strcmp(response,'A,1,0,2')
+    lakeshoreQuery('CSET 1,A,1,0,2');   % Control loop 1, sensor B, in Kelvin (1), default heater off (0), heater units power (2)
 end
 response = lakeshoreQuery('RANGE?');
 if ~strcmp(response,'3')
