@@ -1,4 +1,4 @@
-function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(device,saveTime,acFreq)
+function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(device,mfia)
 
 
 %% J.Wei Zurich Instruments May 19, 2015
@@ -14,7 +14,7 @@ function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(device,saveTi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   
   % Oscillator settings
-  ziDAQ('setDouble', ['/' device '/imps/0/freq'], acFreq);  % Here for YSpec
+  ziDAQ('setDouble', ['/' device '/imps/0/freq'], mfia.ac_freq);  % Here for YSpec
 
   % Unsubscribe all streaming data
   ziDAQ('unsubscribe','*');
@@ -37,11 +37,11 @@ function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(device,saveTi
   %% Poll for data, it will return as much data as it can since the last
   % ziDAQ('flush',...)
   
-cprintf('blue','Collecting data for %d s, elapsed time (s):\n',saveTime);
+cprintf('blue','Collecting data for %d s, elapsed time (s):\n',mfia.sample_time);
 init_loop = 1;
 tic
 % continuously record transient data within the defined save time
-while toc < saveTime
+while toc < mfia.sample_time
     data = ziDAQ('poll',pollDuration,pollTimeout,pollFlag);
     if init_loop
         timeStamp = data.(device).imps.sample.timestamp;

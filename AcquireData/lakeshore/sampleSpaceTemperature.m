@@ -26,7 +26,7 @@ end
 % Get the temperature
 fopen(obj1)
 
-tempString = sn(query(obj1,'KRDG? A'));
+tempString = sn(query(obj1,'KRDG? B'));
 
 if nargin&&strcmpi(varargin{1},'string')
     temp = tempString;

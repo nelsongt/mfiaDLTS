@@ -4,28 +4,28 @@
 % Set sample info
 sample.user = 'George';
 sample.material = 'In0.53Ga0.47As';
-sample.name = 'nBnRG3_Rad3';
-sample.area = '0.05';  % mm^2
-sample.comment = '10s 1.0MHz 125mV 4rej';
+sample.name = 'FGA015-Long';
+sample.area = '0.0177';  % mm^2
+sample.comment = '-5V 20s 1.0MHz 125mV 4rej';
 sample.save_folder = strcat('.\data\',sample.name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
 
 %cv_doping = 1e15;       % 1/cm^3, TODO
 
 % Set DLTS experiment parameters
-mfia.sample_time = 10;     % sec, length to sample each temp point, determines speed of scan and SNR
-mfia.ss_bias = 2.0;       % V, steady-state bias
-mfia.pulse_height = -1.8;   % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
+mfia.sample_time = 60;     % sec, length to sample each temp point, determines speed of scan and SNR
+mfia.ss_bias = -2;       % V, steady-state bias
+mfia.pulse_height = 1.8;   % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
 mfia.full_period = 0.153;  % s, length of single experiment in time (must be longer than trns_length+pulse_width)
 mfia.trns_length = 0.150;  % s, amount of transient sampled and saved
 mfia.pulse_width = 0.002;   % s, length of pulse in time
 
 % Set temperature parameters
-temp_init = 300;           % K, Initial DLTS temperature
-temp_step = 1.0;           % K, Capture transient each temp step
-temp_final = 320;           % K, DLTS ending temperature
-temp_idle = 5;           % K, Temp to set after experiment is over
-temp_stability = 0.20;      % K, Sets how close to the setpoint the temperature must be before collecting data (set point +- stability)
-time_stability = 5;       % s, How long must temperature be within temp_stability before collecting data, tests if PID settings overshoot set point, also useful if actual sample temp lags sensor temp
+temp_init = 200;           % K, Initial DLTS temperature
+temp_step = 0.5;           % K, Capture transient each temp5 step
+temp_final = 50;           % K, DLTS ending temperature
+temp_idle = 200;           % K, Temp to set after experiment is over
+temp_stability = 0.10;      % K, Sets how close to the setpoint the temperature must be before collecting data (set point +- stability)
+time_stability = 7;       % s, How long must temperature be within temp_stability before collecting data, tests if PID settings overshoot set point, also useful if actual sample temp lags sensor temp
 
 % Set MFIA Parameters
 mfia.time_constant = 2.4e-6; % us, lock in time constant, GN suggests 2.4e-6
