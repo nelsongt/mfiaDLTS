@@ -20,7 +20,7 @@ fprintf(fid, 'Sampling Rate= %d\n', mfia.sample_rate);
 fprintf(fid, 'Sampling Time= %d\n', mfia.sample_time);
 fprintf(fid, 'Temperature= %f\n', setTemperature);
 fprintf(fid, '[data]\n');
-fprintf(fid, 'ang_freq(Hz)\tcap(F)\tcond(S)\n');
+fprintf(fid, 'freq(HZ)\tang_freq(Hz)\tcap(F)\tcond(S)\n');
 for i=1:length(Frequencies)
     fprintf(fid, '%e\t%e\t%e\t%e\n', Frequencies(i),Omegas(i),Caps(i),Conds(i)');
 end

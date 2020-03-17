@@ -3,24 +3,24 @@
 % Set sample info
 sample.user = 'George';
 sample.material = 'In0.53Ga0.47As';
-sample.name = 'FGA015-RAD';
-sample.area = '0.0177';  % mm^2
+sample.name = 'GAP1000-1_Pre';
+sample.area = '0.785';  % mm^2
 sample.comment = '-0.2V';
 sample.save_folder = strcat('.\data\',sample.name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
 
 % Set YSpec experiment parameters
-mfia.sample_time = 10;     % sec, length to sample each temp point, determines speed of scan and SNR
-mfia.ss_bias = -0.2;       % V, steady-state bias
-ac_freq_start = 300;     % Hz, start lock in AC frequency, GN suggests ~100Hz
-ac_freq_final = 5e6;     % Hz, final frequency, GN suggests 5MHz (MFIA limit)
-ac_freq_steps = 150;     % Frequency step size on the log-scale
+mfia.sample_time = 10;    % sec, length to sample each temp point, determines speed of scan and SNR
+mfia.ss_bias = 0.2;      % V, steady-state bias
+ac_freq_start = 400;      % Hz, start lock in AC frequency, GN suggests ~100Hz
+ac_freq_final = 5e6;      % Hz, final frequency, GN suggests 5MHz (MFIA limit)
+ac_freq_steps = 145;      % Frequency step size on the log-scale
 
 % Set temperature parameters
-temp_init = 300;         % K, Initial temperature
+temp_init = 300;        % K, Initial temperature
 temp_step = 10;         % K, Temperature step size
-temp_final = 50;       % K, Ending temperature
-temp_idle = 200;        % K, Temp to set after experiment is over
-temp_stability = 0.2;  % K, Sets how stable the temperature point must be (set point +- stability)
+temp_final = 80;        % K, Ending temperature
+temp_idle = 50;        % K, Temp to set after experiment is over
+temp_stability = 0.2;   % K, Sets how stable the temperature point must be (set point +- stability)
 time_stability = 20;    % s, How long must temperature be stable before collecting data, useful if sample lags temperature or if PID settings are overshooting beyond the stability criteria above
 
 % Set MFIA Parameters
@@ -32,6 +32,7 @@ mfia.ac_freq = ac_freq_start; % Hz, not used for YSpec
 mfia.full_period = 0.150;     % s, not used for YSpec
 mfia.trns_length = 0.150;     % s, not used for YSpec
 mfia.pulse_width = 0.000;     % s, not used for YSpec
+mfia.irange = 0.0001;         % A, current range for MFIA  
 
 
 % Setup PATH
@@ -58,6 +59,11 @@ while current_num <= steps
     SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
     for i=1:length(freqs)
         mfia.ac_freq = freqs(i);
+        if freqs(i) < 99000
+            mfia.irange = 0.0001;
+        elseif freqs(i) > 99000
+            mfia.irange = 0.001;
+        end
         [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(device,mfia);
         avg_G(i) = 1 / mean(sampleRes);
         avg_C(i) = mean(sampleCap);

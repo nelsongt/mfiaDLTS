@@ -16,7 +16,7 @@ time = linspace(1/SR,(1/SR)*realNumSamp,realNumSamp);
 
 % Transient averaging & plotting
 close all
-figure('Position',[200,500,600,450]);
+figure('Position',[200,500,500,375]);
 hold on;
 color = summer(transients);
 sum = zeros(realNumSamp,transients-1);
@@ -40,7 +40,7 @@ plot(time,averagedTransient,'r');
 hold off;
 
 % Semilog plot
-figure('Position',[800,500,600,450]);
+figure('Position',[700,500,500,375]);
 hold on;
 semilogx(averagedTransient);
 set(gca, 'XScale', 'log','xlim',[1 realNumSamp]);
