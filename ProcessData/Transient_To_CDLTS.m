@@ -8,7 +8,7 @@ expconst = (exp(-2)-1)/2;
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'nBnRG3_Rad3'
+Folder_Name = 'GAP1000-1_Pre'
 %% File read code  % TODO: Clean up by moving to own function
 F_dir = strcat(Folder_Name, '\*_*.iso');
 F = dir(F_dir);
@@ -47,11 +47,10 @@ end
 sampling_period = (1 / sampling_rate) * (length(Data{1,1}));
 
 
-
 %% Define list of rate windows           NOTE: May need to be changed depending on filter function
 %rate_window = logspace(log10(20),log10(110),10);  % auto generate a list
-rate_window = [20,50,100,200,500,1000,2000];  % suggested windows: 20,50,100,200,500,1000,2000,5000
-%rate_window = [32,64,128,256];  % also a good list: 16,32,64,256,512,1024
+rate_window = [20,50,100,200,500,1000];  % suggested windows: 20,50,100,200,500,1000,2000,5000
+%rate_window = [16,32,64,128,256,512];  % also a good list: 16,32,64,256,512,1024
 %rate_window = 50;                     % single rate good for plotting
 
 del_cap = zeros(length(rate_window),total);
@@ -59,18 +58,19 @@ del_cap_norm = zeros(length(rate_window),total);
 
 
 %% List of filter functions, one must be used and only one
-%[del_cap,del_cap_norm] = weightboxcar(Data,rate_window,sampling_rate,ss_caps,total);      %TODO: Find proper gating and timing, was this done?
-[del_cap,del_cap_norm] = weightlockin(Data,rate_window,sampling_rate,ss_caps,total);
-%[del_cap,del_cap_norm] = weightexp(Data,rate_window,sampling_rate,ss_caps,total,expconst); % Recommended for SNR
-%[del_cap,del_cap_norm] = weightsine(Data,rate_window,sampling_rate,ss_caps,total);      
-%[del_cap,del_cap_norm] = weightcosine(Data,rate_window,sampling_rate,ss_caps,total);      % Recommended for resolution
+%[del_cap,del_cap_norm] = weightboxcar(Data,rate_window,sampling_rate,ss_caps,total);    %TODO: Find proper gating and timing
+%[del_cap,del_cap_norm] = weightlockin(Data,rate_window,sampling_rate,ss_caps,total);
+%[del_cap,del_cap_norm] = weightexp(Data,rate_window,sampling_rate,ss_caps,total,expconst);
+[del_cap,del_cap_norm] = weightexpbs(Data,rate_window,sampling_rate,ss_caps,total,expconst);
+%[del_cap,del_cap_norm] = weightsine(Data,rate_window,sampling_rate,ss_caps,total);      % Recommended for SNR
+%[del_cap,del_cap_norm] = weightcosine(Data,rate_window,sampling_rate,ss_caps,total);    % Recommended for resolution
 
 
 %% TODO: Re-arrange all data from smallest to largest temperature here
 
 
 
-%% Automated Arrhenius plot     % TODO: Find a way to fit only a certain range of data
+%% Fit each spectrum     % TODO: Find a way to fit only a certain range of data
 %for jj = 1:length(rate_window)
 %    figure
 %    hold on
@@ -81,7 +81,6 @@ del_cap_norm = zeros(length(rate_window),total);
 %    hold off
 %    close
 %end
-%%Alternate version
 %for jj = 1:length(rate_window)
 %    f = ezfit(Temps, del_cap(jj,:), 'ngauss');
 %    g = str2sym(f.eq);
@@ -140,30 +139,30 @@ jXLabel = xlabel('Temp (K)','fontsize',14           );
 
 
 %% Plot normalized CDLTS Spectra
-figure
-set(gca,'FontSize',11);
+%figure
+%set(gca,'FontSize',11);
 %kYLabel = ylabel('|2*N_D*\DeltaC_0/C| (cm^{-3})','fontsize',14       );
-kYLabel = ylabel('|\DeltaC_0/C|','fontsize',14       );
-kXLabel = xlabel('Temp (K)','fontsize',14           );
+%kYLabel = ylabel('|\DeltaC_0/C|','fontsize',14       );
+%kXLabel = xlabel('Temp (K)','fontsize',14           );
 %ylim([10^9 10^15]);
-xlim([0 400]);
-hold on;
-for jj = 1:length(rate_window)
+%xlim([0 400]);
+%hold on;
+%for jj = 1:length(rate_window)
     %scatter(Temps,del_cap_norm(jj,:),5,'filled');
-    %plot(sort(Temps),2*7e14*abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
-    plot(sort(Temps),abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
+%    plot(sort(Temps),2*7e14*abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
+    %plot(sort(Temps),abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
     %plot (Temps,fit_y(jj,:));
-end
-set(gca,'yscale','log');
+%end
+%set(gca,'yscale','log');
 
 % legend stuff %
-lgd2 = legend(num2str(rate_window(:)));
-title(lgd2,'Rate Constant (1/s)')
-lgd2.FontSize = 11
-box on
+%lgd2 = legend(num2str(rate_window(:)));
+%title(lgd2,'Rate Constant (1/s)')
+%lgd2.FontSize = 11
+%box on
 % end legend stuff %
 
-hold off;
+%hold off;
 %%%%%%%% End Main %%%%%%%%
 
 
@@ -241,6 +240,37 @@ for jj = 1:length(RW)
             expfun_data(kk+1) = expfun(kk+sample_d(jj),sample_d(jj),sample_c(jj),ECONST);
         end
         DC(jj,ii) = -1000*gain*trapz(DATA{1,ii}(sample_d(jj):(sample_d(jj)+sample_c(jj))).*expfun_data) / double(sample_c(jj));
+        
+    end
+    DC_norm(jj,:) = DC(jj,:) ./ (1000.*SSCAP);
+end
+end
+
+%% Exponential correlator weighting routine starts %%
+function [DC,DC_norm] = weightexpbs(DATA,RW,SR,SSCAP,TOT,ECONST)
+% Set the transient length for weight function per rate window, see Istratov 1998 10.1088/0957-0233/9/3/023 
+bsfactor = 2; % don't tell anyone about this
+t_d = 0.082 ./ (0.444 .* RW);  % seconds
+t_c = 1 ./ (0.444 .* RW);  % seconds
+sample_d = double(t_d .* SR);
+sample_c = double(t_c .* SR);
+total_samples = bsfactor*floor(t_c .* SR)+1;
+real_spacing = linspace(1,size(DATA{1,1},1),size(DATA{1,1},1));
+
+gain = 19.2/bsfactor;  % gain calculated from the filter t_c&t_d by George via numerical integration
+
+% integrate S(smpl) * W(smpl - smpl_d) d_smpl from smpl_d to smpl_c
+for jj = 1:length(RW)
+    for ii = 1:TOT
+        expfun_data = [];
+        interp_spacing = [];
+        expfun_data = zeros(total_samples(jj),1);
+        interp_spacing = linspace(sample_d(jj),sample_d(jj)+sample_c(jj),total_samples(jj));
+        for kk = 1:total_samples(jj)
+            expfun_data(kk) = expfun(interp_spacing(kk),sample_d(jj),sample_c(jj),ECONST);
+        end
+        interp_data = interp1(real_spacing,DATA{1,ii},interp_spacing,'spline').';
+        DC(jj,ii) = -1000*gain*trapz(interp_data.*expfun_data) / sample_c(jj);
         
     end
     DC_norm(jj,:) = DC(jj,:) ./ (1000.*SSCAP);
@@ -345,6 +375,7 @@ else
     w = 'thats a worse'
 end
 end
+
 
 function w = sinefun(sample,sc)
 % Weighting function w = sin(2pi*t_norm)
