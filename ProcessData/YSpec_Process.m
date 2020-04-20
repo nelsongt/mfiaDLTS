@@ -4,7 +4,7 @@ clear
 format long
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'C12S413_150mV'
+Folder_Name = 'GAP1000-1_Pre'
 %% File read code  % TODO: Clean up by moving to own function
 F_dir = strcat(Folder_Name, '\*_*.dat');
 F = dir(F_dir);

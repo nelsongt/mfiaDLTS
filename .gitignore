@@ -2,3 +2,6 @@
 *.asv
 AcquireData/LabOneMatlab/*
 AcquireData/data
+*.mat
+*.iso
+*.dat
