@@ -7,7 +7,7 @@ addpath(genpath('.\Subroutines'))
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'GAP500-3_Pre';
+Folder_Name = 'GAP500-VII_2MeVRev4';
 
 [Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'iso');
 total = length(Data);

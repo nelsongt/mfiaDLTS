@@ -2,9 +2,11 @@
 
 clear
 format long
+% Setup PATH
+addpath(genpath('.\Subroutines'))
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'GAP1000-1_PreY'
+Folder_Name = 'GAP500-V_300keVYSpec'
 
 [Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'dat');
 total = length(Data);
