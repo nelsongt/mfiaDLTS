@@ -7,7 +7,7 @@ addpath(genpath('.\Subroutines'))
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'GAP500-VII_2MeVRev4';
+Folder_Name = 'GAP500-3_Pre';
 
 [Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'iso');
 total = length(Data);
@@ -33,7 +33,7 @@ del_cap_norm = zeros(length(rate_window),total);
 %[del_cap,del_cap_norm] = weightexp(Data,rate_window,sampling_rate,ss_caps,total);       % Good for SNR but aliasing at high frequency
 [del_cap,del_cap_norm] = weightexpbs(Data,rate_window,sampling_rate,ss_caps,total);     % Best SNR but slowest
 %[del_cap,del_cap_norm] = weightsine(Data,rate_window,sampling_rate,ss_caps,total);      % Trusted alternative, decent SNR
-%[del_cap,del_cap_norm] = weightcosine(Data,rate_window,sampling_rate,ss_caps,total);    % Recommended for resolution
+%[del_cap,del_cap_norm] = weightcosine(Data,rate_window,sampling_rate,ss_caps,total);    % Recommended for resolution(?)
 
 
 %% TODO: Re-arrange all data from smallest to largest temperature here
@@ -106,33 +106,33 @@ plot(sort(Temps),sortBlikeA(Temps,ss_caps));
 set(gca,'FontSize',11);
 jYLabel = ylabel('Diode Capacitance at Bias (pF)','fontsize',14       );
 jXLabel = xlabel('Temp (K)','fontsize',14           );
+%set(gca,'yscale','log');
 
 
 %% Plot normalized CDLTS Spectra
-%figure
-%set(gca,'FontSize',11);
-%kYLabel = ylabel('|2*N_D*\DeltaC_0/C| (cm^{-3})','fontsize',14       );
-%kYLabel = ylabel('|\DeltaC_0/C|','fontsize',14       );
-%kXLabel = xlabel('Temp (K)','fontsize',14           );
-%ylim([10^9 10^15]);
-%xlim([0 400]);
-%hold on;
-%for jj = 1:length(rate_window)
+figure
+set(gca,'FontSize',11);
+kYLabel = ylabel('|2*N_D*\DeltaC_0/C| (cm^{-3})','fontsize',14       );
+kYLabel = ylabel('|\DeltaC_0/C|','fontsize',14       );
+kXLabel = xlabel('Temp (K)','fontsize',14           );
+ylim([10^9 10^15]);
+xlim([0 400]);
+hold on;
+for jj = 1:length(rate_window)
     %scatter(Temps,del_cap_norm(jj,:),5,'filled');
-%    plot(sort(Temps),2*7e14*abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
+    plot(sort(Temps),2*1e15*abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
     %plot(sort(Temps),abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
     %plot (Temps,fit_y(jj,:));
-%end
-%set(gca,'yscale','log');
+end
+set(gca,'yscale','log');
 
-% legend stuff %
-%lgd2 = legend(num2str(rate_window(:)));
-%title(lgd2,'Rate Constant (1/s)')
-%lgd2.FontSize = 11
-%box on
-% end legend stuff %
-
-%hold off;
+ %legend stuff %
+lgd2 = legend(num2str(rate_window(:)));
+title(lgd2,'Rate Constant (1/s)')
+lgd2.FontSize = 11
+box on
+ %end legend stuff %
+hold off;
 %%%%%%%% End Main %%%%%%%%
 
 
