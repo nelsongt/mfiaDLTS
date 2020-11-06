@@ -6,7 +6,14 @@ F = dir(F_dir);
 for ii = 1:length(F)
     fileID = fopen(strcat('../Data/',FolderName,'\',F(ii).name));
 
-    Header = textscan(fileID,'%s',67,'Delimiter','\n');
+	if FileType == 'iso' % DLTS and YSpec have different data structures, TODO: make this more elegant
+		Header = textscan(fileID,'%s',67,'Delimiter','\n');
+	elseif FileType == 'dat'
+		Header = textscan(fileID,'%s',15,'Delimiter','\n');
+	else
+		Header = 'unrecognized filetype';
+	end
+
 
     for jj = 1:length(Header{1,1})  % Pull out the sample temp and sampling rate
         if contains(lower(Header{1,1}{jj,1}),'temperature=')

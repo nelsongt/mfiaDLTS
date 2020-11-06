@@ -1,16 +1,16 @@
 %% Exponential correlator weighting routine, copyright George Nelson 2020 %%
-function [DC,DC_norm] = weightexpbs(DATA,RW,SR,SSCAP,TOT)
+function [DC,DC_norm] = weightexpaa(DATA,RW,SR,SSCAP,TOT)
 % Set the transient length for weight function per rate window, see Istratov 1998 10.1088/0957-0233/9/3/023 
 ECONST = (exp(-2)-1)/2;
-bsfactor = 2; % don't tell anyone about this
+interpfactor = 2; % increase to reduce aliasing problems for fast rate constants, use with caution
 t_d = 0.082 ./ (0.444 .* RW);  % seconds
 t_c = 1 ./ (0.444 .* RW);  % seconds
 sample_d = double(t_d .* SR);
 sample_c = double(t_c .* SR);
-total_samples = bsfactor*floor(t_c .* SR)+1;
+total_samples = interpfactor*floor(t_c .* SR)+1;
 real_spacing = linspace(1,size(DATA{1,1},1),size(DATA{1,1},1));
 
-gain = 19.2/bsfactor;  % gain calculated from the filter t_c&t_d by George via numerical integration
+gain = 19.2/interpfactor;  % gain calculated from the filter t_c&t_d by George via numerical integration
 
 % integrate S(smpl) * W(smpl - smpl_d) d_smpl from smpl_d to smpl_c
 for jj = 1:length(RW)
