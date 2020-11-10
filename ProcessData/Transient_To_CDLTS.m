@@ -9,7 +9,7 @@ addpath(genpath('.\Subroutines'))
 %%%%%%% Begin Main %%%%%%
 Folder_Name = 'GPD1-2MeV';
 
-[Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'iso');
+[Sample_Name,Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'iso');
 total = length(Data);
 
 %for i=1:total
@@ -36,9 +36,20 @@ del_cap_norm = zeros(length(rate_window),total);
 %[del_cap,del_cap_norm] = weightcosine(Data,rate_window,sampling_rate,ss_caps,total);    % Supposed to be good for resolution
 
 
-%% TODO: Re-arrange all data from smallest to largest temperature here
+%% Re-arrange all data from smallest to largest temperature
+for nn = 1:length(rate_window)
+    del_cap(nn,:) = sortBlikeA(Temps,del_cap(nn,:));
+    del_cap_norm(nn,:) = sortBlikeA(Temps,del_cap_norm(nn,:));
+end
+ss_caps = sortBlikeA(Temps,ss_caps);
+Temps = sort(Temps);
 
 
+%% Write to spectra data file
+SpectraFile(Sample_Name,Folder_Name,rate_window,Temps,ss_caps,del_cap);
+
+
+%%%% PLOTTING %%%%
 
 %% Fit each spectrum     % TODO: Find a way to fit only a certain range of data
 %for jj = 1:length(rate_window)
@@ -100,9 +111,9 @@ hold off;
 %showfit(g);
 %hold off;
 
-
+%% Plot steady-state capacitance
 figure
-plot(sort(Temps),sortBlikeA(Temps,ss_caps));
+plot(Temps,ss_caps);
 set(gca,'FontSize',11);
 jYLabel = ylabel('Diode Capacitance at Bias (pF)','fontsize',14       );
 jXLabel = xlabel('Temp (K)','fontsize',14           );
@@ -120,7 +131,7 @@ xlim([0 400]);
 hold on;
 for jj = 1:length(rate_window)
     %scatter(Temps,del_cap_norm(jj,:),5,'filled');
-    plot(sort(Temps),2*1e15*abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
+    plot(Temps,2*1e15*abs(del_cap_norm(jj,:)),'LineWidth',2);
     %plot(sort(Temps),abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
     %plot (Temps,fit_y(jj,:));
 end
@@ -133,6 +144,7 @@ lgd2.FontSize = 11
 box on
  %end legend stuff %
 hold off;
+
 %%%%%%%% End Main %%%%%%%%
 
 

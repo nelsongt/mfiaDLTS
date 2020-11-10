@@ -1,5 +1,5 @@
 %% Copyright George Nelson 2020 %%
-function [Data,Temps,Caps,SamplingRate] = FolderRead(FolderName,FileType)
+function [SampleName,Data,Temps,Caps,SamplingRate] = FolderRead(FolderName,FileType)
 
 F_dir = strcat('../Data/',FolderName,'\*_*.',FileType);
 F = dir(F_dir);
@@ -22,6 +22,9 @@ for ii = 1:length(F)
         elseif contains(lower(Header{1,1}{jj,1}),'sampling rate=')
             rate_string = strsplit(Header{1,1}{jj,1},'=');
             SamplingRate = str2double(rate_string{1,2});
+        elseif contains(lower(Header{1,1}{jj,1}),'identifier=')
+            rate_string = strsplit(Header{1,1}{jj,1},'=');
+            SampleName = rate_string{1,2};
         end
     end
 

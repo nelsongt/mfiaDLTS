@@ -7,7 +7,7 @@ fileDate = datestr(now,'dd-mm-yyyy  HH:MM');
 status = mkdir(strcat(pwd,'\',sample.save_folder));
 fid = fopen(fullfile(strcat(pwd,'\',sample.save_folder),fileName),'wt');
 fprintf(fid, '[general]\n');
-fprintf(fid, 'software=mfiaYSpec v1.0\n');
+fprintf(fid, 'software=mfiaYSpec v1.1\n');
 fprintf(fid, 'user=%s\n', sample.user);
 fprintf(fid, 'date=%s\n', fileDate);  
 fprintf(fid, 'comment=%s\n', sample.comment);

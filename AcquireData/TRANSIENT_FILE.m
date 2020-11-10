@@ -7,7 +7,7 @@ fileDate = datestr(now,'dd-mm-yyyy  HH:MM');
 status = mkdir(strcat(pwd,'\',sample.save_folder));
 fid = fopen(fullfile(strcat(pwd,'\',sample.save_folder),fileName),'wt');
 fprintf(fid, '[general]\n');
-fprintf(fid, 'software=mfiaDLTS v1.0\n');  %TODO: check if compat. w/ LDLTS software
+fprintf(fid, 'software=mfiaDLTS v1.1\n');  %TODO: check if compat. w/ LDLTS software
 fprintf(fid, 'hardware=MFIA\n');
 fprintf(fid, 'serial number=000 [000000000]\n');
 fprintf(fid, 'user=%s\n', sample.user);
