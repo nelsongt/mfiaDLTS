@@ -7,14 +7,14 @@ addpath(genpath('.\Subroutines'))
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'GPD1-2MeV';
+Folder_Name = 'GAP500-IV-Post400K';
 
 [Sample_Name,Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'iso');
 total = length(Data);
 
-%for i=1:total
-%    Data{1,i} = Data{1,i}(4:end);  % skip hardware recovery points not properly removed, only use if needed
-%end
+for i=1:total
+    Data{1,i} = Data{1,i}(10:end);  % skip hardware recovery points not properly removed, only use if needed
+end
 
 %% Define list of rate windows           NOTE: May need to be changed depending on filter function
 %rate_window = logspace(log10(20),log10(110),10);  % auto generate a list

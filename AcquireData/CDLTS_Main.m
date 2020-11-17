@@ -4,23 +4,23 @@
 % Set sample info
 sample.user = 'George';
 sample.material = 'In0.53Ga0.47As';
-sample.name = 'GPD2-1MeV-FP';
+sample.name = 'GAP500-IV-Post400K';
 sample.area = '0.196';  % mm^2
-sample.comment = '1MeV 80deg F2 150ms 25s 1.0MHz 125mV 4rej';
+sample.comment = '150ms 30s 1MHz 125mV 4rej';
 
 % Set DLTS experiment parameters
 mfia.ss_bias = 2.0;       % V, steady-state bias
-mfia.pulse_height = -2.5;   % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
+mfia.pulse_height = -1.8;   % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
 mfia.full_period = 0.161;  % s, length of single experiment in time (must be longer than trns_length+pulse_width)
 mfia.trns_length = 0.150;  % s, amount of transient sampled and saved
 mfia.pulse_width = 0.010;   % s, length of pulse in time
-mfia.sample_time = 25;     % sec, length to sample each temp point, determines speed of scan and SNR
+mfia.sample_time = 30;     % sec, length to sample each temp point, determines speed of scan and SNR
 
 % Set temperature parameters
 temp_init = 300;           % K, Initial DLTS temperature
 temp_step = 0.5;           % K, Capture transient each temp5 step
 temp_final = 50;           % K, DLTS ending temperature
-temp_idle = 250;           % K, Temp to set after experiment is over
+temp_idle = 200;           % K, Temp to set after experiment is over
 temp_stability = 0.10;      % K, Sets how close to the setpoint the temperature must be before collecting data (set point +- stability)
 time_stability = 5;       % s, How long must temperature be within temp_stability before collecting data, tests if PID settings overshoot set point, also useful if actual sample temp lags sensor temp
 

@@ -3,22 +3,22 @@
 % Set sample info
 sample.user = 'George';
 sample.material = 'In0.53Ga0.47As';
-sample.name = 'GAP500-Stage3YSpec';
+sample.name = 'GAP500-IV-Post400K-YSpec';
 sample.area = '0.196';  % mm^2
 sample.comment = '-0.2V';
 
 % Set YSpec experiment parameters
-mfia.sample_time = 10;    % sec, length to sample each temp point, determines speed of scan and SNR
+mfia.sample_time = 5;    % sec, length to sample each temp point, determines speed of scan and SNR
 mfia.ss_bias = 0.2;      % V, steady-state bias
 ac_freq_start = 400;      % Hz, start lock in AC frequency, GN suggests ~100Hz
 ac_freq_final = 5e6;      % Hz, final frequency, GN suggests 5MHz (MFIA limit)
 ac_freq_steps = 145;      % Frequency step size on the log-scale
 
 % Set temperature parameters
-temp_init = 95;        % K, Initial temperature
-temp_step = 5;         % K, Temperature step size
-temp_final = 97.5;        % K, Ending temperature
-temp_idle = 80;        % K, Temp to set after experiment is over
+temp_init = 300;        % K, Initial temperature
+temp_step = 10;         % K, Temperature step size
+temp_final = 50;        % K, Ending temperature
+temp_idle = 200;        % K, Temp to set after experiment is over
 temp_stability = 0.2;   % K, Sets how stable the temperature point must be (set point +- stability)
 time_stability = 20;    % s, How long must temperature be stable before collecting data, useful if sample lags temperature or if PID settings are overshooting beyond the stability criteria above
 
@@ -62,7 +62,7 @@ while current_num <= steps
         %if freqs(i) < 1000  % Use these to change the MFIA current range, depends on sample TODO
         %    mfia.irange = 0.0001;
         %elseif freqs(i) > 9900000
-        %    mfia.irange = 0.001;
+        %    mfia.irange = 0.0001;
         %elseif freqs(i) > 1000
         %    mfia.irange = 0.0001;
         %end
