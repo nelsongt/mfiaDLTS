@@ -13,7 +13,7 @@ fprintf(fid, '[sample]\n');
 fprintf(fid, 'Identifier=%s\n', SampleName);
 fprintf(fid, '[data]\n');
 % Build column header and data format strings
-hdr_str='Temp(K)\tCap(pF)';  
+hdr_str='Temp(K)\tCapacitance(pF)';  
 for j=1:length(Rates)
     hdr_str=[hdr_str '\t' int2str(Rates(j)) 'Hz(fF)'];    
 end
