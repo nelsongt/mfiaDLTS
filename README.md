@@ -1,3 +1,5 @@
+December 2020 Note:  Below readme is a bit outdated, will be updating shortly with v1.1 release. If interested in testing python version with gui, beta is here: https://github.com/nelsongt/mfiaDLTS2
+
 **To Download**: Go to [releases page](https://github.com/nelsongt/mfiaDLTS/releases), current version is v1.0. Master branch is not always in a working state.
 
 Introduction
