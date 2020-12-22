@@ -7,7 +7,7 @@ addpath(genpath('.\Subroutines'))
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'GAP500-IV-Post400K';
+Folder_Name = 'GPD7-250keV8V4V';
 
 [Sample_Name,Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'iso');
 total = length(Data);
@@ -124,7 +124,7 @@ jXLabel = xlabel('Temp (K)','fontsize',14           );
 figure
 set(gca,'FontSize',11);
 kYLabel = ylabel('|2*N_D*\DeltaC_0/C| (cm^{-3})','fontsize',14       );
-kYLabel = ylabel('|\DeltaC_0/C|','fontsize',14       );
+%kYLabel = ylabel('|\DeltaC_0/C|','fontsize',14       );
 kXLabel = xlabel('Temp (K)','fontsize',14           );
 ylim([10^9 10^15]);
 xlim([0 400]);

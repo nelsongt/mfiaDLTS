@@ -15,9 +15,9 @@ ac_freq_final = 5e6;      % Hz, final frequency, GN suggests 5MHz (MFIA limit)
 ac_freq_steps = 145;      % Frequency step size on the log-scale
 
 % Set temperature parameters
-temp_init = 300;        % K, Initial temperature
-temp_step = 10;         % K, Temperature step size
-temp_final = 50;        % K, Ending temperature
+temp_init = 120;        % K, Initial temperature
+temp_step = 2.5;         % K, Temperature step size
+temp_final = 90;        % K, Ending temperature
 temp_idle = 200;        % K, Temp to set after experiment is over
 temp_stability = 0.2;   % K, Sets how stable the temperature point must be (set point +- stability)
 time_stability = 20;    % s, How long must temperature be stable before collecting data, useful if sample lags temperature or if PID settings are overshooting beyond the stability criteria above
