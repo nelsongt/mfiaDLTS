@@ -7,9 +7,6 @@ sample.material = 'In0.53Ga0.47As';
 sample.name = 'AnnealStage4-270-PostIV';
 sample.area = '0.196';  % mm^2
 sample.comment = 'Stage 4 90s 0.4V 270K postIV anneal 1.0MHz 125mV 4rej';
-sample.save_folder = strcat('.\data\',sample.name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
-
-%cv_doping = 1e15;       % 1/cm^3, TODO
 
 % Set DLTS experiment parameters
 mfia.sample_time = 90;     % sec, length to sample each temp point, determines speed of scan and SNR
@@ -20,7 +17,7 @@ mfia.trns_length = 2.300;  % s, amount of transient sampled and saved
 mfia.pulse_width = 0.010;   % s, length of pulse in time
 
 % Set temperature parameters
-temp_test = 150;            % K, Temp to do FDLTS
+temp_test = 150;            % K, Temp to do isoDLTS
 temp_anneal = 270;          % K, Anneal temperature
 time_anneal = 90;           % m, anneal time, or time between DLTS tests
 test_temp_stability = 0.05;      % K, Sets how close to the setpoint the temperature must be before collecting data (set point +- stability)
@@ -35,6 +32,7 @@ mfia.ac_ampl = 0.125;         % V, lock in AC amplitude, GN suggests ~100 mV for
 mfia.sample_rate = 107143;   % Hz, sampling rate Hz, for CDLTS use 53571 or 107143 or 214286
 
 % Setup PATH
+sample.save_folder = strcat('..\Data\',sample.name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
 addpath(genpath('.\lakeshore'))		% point to lakeshore driver
 addpath(genpath('.\LabOneMatlab'))  % point to LabOneMatlab drivers
 ziAddPath % ZI instrument driver load
