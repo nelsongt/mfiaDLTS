@@ -7,14 +7,14 @@ addpath(genpath('.\Subroutines'))
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'GPD7-250keV8V4V';
+Folder_Name = 'GPD6-250keV10VP2';
 
 [Sample_Name,Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'iso');
 total = length(Data);
 
-for i=1:total
-    Data{1,i} = Data{1,i}(10:end);  % skip hardware recovery points not properly removed, only use if needed
-end
+%for i=1:total
+%    Data{1,i} = Data{1,i}(10:end);  % skip hardware recovery points not properly removed, only use if needed
+%end
 
 %% Define list of rate windows           NOTE: May need to be changed depending on filter function
 %rate_window = logspace(log10(20),log10(110),10);  % auto generate a list
@@ -77,7 +77,7 @@ SpectraFile(Sample_Name,Folder_Name,rate_window,Temps,ss_caps,del_cap);
 %% Plot CDLTS Spectra
 figure
 set(gca,'FontSize',11);
-hYLabel = ylabel('\DeltaC_0 (fF)','fontsize',14       );
+hYLabel = ylabel('\DeltaC (fF)','fontsize',14       );
 hXLabel = xlabel('Temp (K)','fontsize',14           );
 %ylim([1 140]);
 %xlim([0 400]);
@@ -123,16 +123,16 @@ jXLabel = xlabel('Temp (K)','fontsize',14           );
 %% Plot normalized CDLTS Spectra
 figure
 set(gca,'FontSize',11);
-kYLabel = ylabel('|2*N_D*\DeltaC_0/C| (cm^{-3})','fontsize',14       );
-%kYLabel = ylabel('|\DeltaC_0/C|','fontsize',14       );
+%kYLabel = ylabel('|2*N_D*\DeltaC/C| (cm^{-3})','fontsize',14       );
+kYLabel = ylabel('|\DeltaC/C|','fontsize',14       );
 kXLabel = xlabel('Temp (K)','fontsize',14           );
 ylim([10^9 10^15]);
 xlim([0 400]);
 hold on;
 for jj = 1:length(rate_window)
     %scatter(Temps,del_cap_norm(jj,:),5,'filled');
-    plot(Temps,2*1e15*abs(del_cap_norm(jj,:)),'LineWidth',2);
-    %plot(sort(Temps),abs(sortBlikeA(Temps,del_cap_norm(jj,:))),'LineWidth',2);
+    %plot(Temps,2*1e15*abs(del_cap_norm(jj,:)),'LineWidth',2);
+    plot(Temps,del_cap_norm(jj,:),'LineWidth',2);
     %plot (Temps,fit_y(jj,:));
 end
 set(gca,'yscale','log');
