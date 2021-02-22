@@ -7,7 +7,7 @@ addpath(genpath('.\Subroutines'))
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'GPD6-250keV10VPre'
+Folder_Name = 'FGA015-3-P2Single'
 
 [Sample_Name,Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'iso');
 total = length(Data);

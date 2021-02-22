@@ -6,7 +6,7 @@ format long
 addpath(genpath('.\Subroutines'))
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'GAP500-IV-Post400K-YSpec'
+Folder_Name = 'FGA015-3-YSpec'
 
 [Sample_Name,Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'dat');
 total = length(Data);

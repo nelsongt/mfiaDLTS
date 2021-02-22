@@ -7,7 +7,7 @@ addpath(genpath('.\Subroutines'))
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'GPD6-250keV10VP2';
+Folder_Name = 'GAP500-3_Pre';
 
 [Sample_Name,Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'iso');
 total = length(Data);
@@ -126,7 +126,7 @@ set(gca,'FontSize',11);
 %kYLabel = ylabel('|2*N_D*\DeltaC/C| (cm^{-3})','fontsize',14       );
 kYLabel = ylabel('|\DeltaC/C|','fontsize',14       );
 kXLabel = xlabel('Temp (K)','fontsize',14           );
-ylim([10^9 10^15]);
+%ylim([10^9 10^15]);
 xlim([0 400]);
 hold on;
 for jj = 1:length(rate_window)
@@ -135,7 +135,7 @@ for jj = 1:length(rate_window)
     plot(Temps,del_cap_norm(jj,:),'LineWidth',2);
     %plot (Temps,fit_y(jj,:));
 end
-set(gca,'yscale','log');
+%set(gca,'yscale','log');
 
  %legend stuff %
 lgd2 = legend(num2str(rate_window(:)));
