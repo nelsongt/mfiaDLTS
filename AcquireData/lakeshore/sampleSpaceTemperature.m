@@ -10,7 +10,9 @@
 % Todd Karin
 % 10/05/2014
 
-function temp = sampleSpaceTemperature(varargin)
+%% Modified by George Nelson for setting sensor
+
+function temp = sampleSpaceTemperature(temp,varargin)
 
 % Initialize communication to temperature controller.
 obj1 = instrfind('Type', 'gpib', 'BoardIndex', 0, 'PrimaryAddress', 12);
@@ -26,7 +28,8 @@ end
 % Get the temperature
 fopen(obj1)
 
-tempString = sn(query(obj1,'KRDG? B'));
+sense_string = strcat('KRDG? ',temp.sample);
+tempString = sn(query(obj1,sense_string));
 
 if nargin&&strcmpi(varargin{1},'string')
     temp = tempString;

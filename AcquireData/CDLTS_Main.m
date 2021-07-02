@@ -9,25 +9,30 @@ sample.area = '0.196';  % mm^2
 sample.comment = '150ms 30s 1MHz 125mV 4rej';
 
 % Set DLTS experiment parameters
-mfia.ss_bias = 8.0;       % V, steady-state bias
+mfia.ss_bias = 8.0;         % V, steady-state bias
 mfia.pulse_height = -7.8;   % V, bias applied by pulse generator, absolute bias during pulse is ss_bias+pulse_bias
-mfia.full_period = 0.161;  % s, length of single experiment in time (must be longer than trns_length+pulse_width)
-mfia.trns_length = 0.150;  % s, amount of transient sampled and saved
+mfia.full_period = 0.161;   % s, length of single experiment in time (must be longer than trns_length+pulse_width)
+mfia.trns_length = 0.150;   % s, amount of transient sampled and saved
 mfia.pulse_width = 0.010;   % s, length of pulse in time
-mfia.sample_time = 30;     % sec, length to sample each temp point, determines speed of scan and SNR
+mfia.sample_time = 30;      % sec, length to sample each temp point, determines speed of scan and SNR
 
-% Set temperature parameters
-temp_init = 300;           % K, Initial DLTS temperature
-temp_step = 0.5;           % K, Capture transient each temp5 step
-temp_final = 50;           % K, DLTS ending temperature
-temp_idle = 200;           % K, Temp to set after experiment is over
+% Set temperature control parameters
+temp_init = 300;            % K, Initial DLTS temperature
+temp_step = 0.5;            % K, Capture transient each temp5 step
+temp_final = 50;            % K, DLTS ending temperature
+temp_idle = 200;            % K, Temp to set after experiment is over
 temp_stability = 0.10;      % K, Sets how close to the setpoint the temperature must be before collecting data (set point +- stability)
-time_stability = 5;       % s, How long must temperature be within temp_stability before collecting data, tests if PID settings overshoot set point, also useful if actual sample temp lags sensor temp
+time_stability = 5;         % s, How long must temperature be within temp_stability before collecting data, tests if PID settings overshoot set point, also useful if actual sample temp lags sensor temp
 
-% Set MFIA Parameters
+% Configure Lakeshore Parameters
+temp.control = 'B';         % Control sensor (closest to heater), A or B
+temp.sample = 'B';          % Measure sensor (closest to sample), A or B
+temp.heatpower = 3;         % Heater power range, sets heater to high (3), medium (2), low (1) 
+
+% Configure MFIA Parameters
 mfia.time_constant = 2.4e-6; % us, lock in time constant, GN suggests 2.4e-6
 mfia.ac_freq = 1.0e6;        % Hz, lock in AC frequency, GN suggests 1MHz
-mfia.ac_ampl = 0.125;         % V, lock in AC amplitude, GN suggests ~100 mV for good SNR
+mfia.ac_ampl = 0.125;        % V, lock in AC amplitude, GN suggests ~100 mV for good SNR
 mfia.sample_rate = 107143;   % Hz, sampling rate Hz, for CDLTS use 53571 or 107143 or 214286
 
 % Setup PATH
@@ -40,11 +45,14 @@ ziAddPath % ZI instrument driver load
 
 %%% MAIN %%%
 % Check for and initialize lakeshore 331
-if LAKESHORE_INIT()==0
+if LAKESHORE_INIT(temp)==0
     return;
 end
 % Check for and initialize MFIA
 device = MFIA_INIT(mfia);
+
+cprintf('orange', 'Hardware initialized. If needed, connect sample leads and ensure LabOne is configured to satisfaction. Press any key to continue...');
+pause
 
 % Main loop
 current_temp = temp_init;
@@ -55,10 +63,10 @@ while current_num <= steps
     SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
     
     cprintf('blue', 'Capturing transient...\n');
-    temp_before = sampleSpaceTemperature;
+    temp_before = sampleSpaceTemperature(temp);
     %[timestamp, sampleCap] = MFIA_CAPACITANCE_POLL(device,mfia);
     [timestamp, sampleCap] = MFIA_CAPACITANCE_DAQ(device,mfia);
-    temp_after = sampleSpaceTemperature;
+    temp_after = sampleSpaceTemperature(temp);
     cprintf('green', 'Finished transient for this temperature.\n');
     avg_temp = (temp_before + temp_after) / 2;
     

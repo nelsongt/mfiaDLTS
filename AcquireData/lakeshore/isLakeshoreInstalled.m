@@ -31,17 +31,17 @@ fprintf(obj1, '*idn?');
 pause(.05);
 
 cut = 1:10;
-idnCheck = 'LSCI,MODEL330,0,032301';
+idnCheck330 = 'LSCI,MODEL330';
 idn = fscanf(obj1);
 
-if strcmp(idn(cut),idnCheck(cut))
+if strcmp(idn(cut),idnCheck330(cut))
     installed = 1;
 else
     installed = 0;
 end
 
 catch err
-    disp('Cannot connect to Lakeshore 335!')
+    disp('Cannot connect to Lakeshore!')
     disp(err.message)
     installed = 0;
 end
