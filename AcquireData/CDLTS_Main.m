@@ -60,7 +60,7 @@ current_num = 0;
 steps = ceil(abs(temp_init - temp_final)/temp_step);
 while current_num <= steps
     cprintf('blue', 'Waiting for set point (%3.2f)...\n',current_temp);
-    SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
+    SET_TEMP(current_temp,temp_stability,time_stability,temp); % Wait for lakeshore to reach set temp;
     
     cprintf('blue', 'Capturing transient...\n');
     temp_before = sampleSpaceTemperature(temp);
@@ -91,7 +91,7 @@ while current_num <= steps
 end
 
 cprintf('blue', 'Finished data collection, returning to idle temp.\n');
-SET_TEMP(temp_idle,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
+SET_TEMP(temp_idle,temp_stability,time_stability,temp); % Wait for lakeshore to reach set temp;
 cprintf('green', 'All done.\n');
 
 

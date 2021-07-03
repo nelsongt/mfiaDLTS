@@ -1,14 +1,14 @@
-function [] = SET_TEMP(setPoint,tempStable,timeStable)
+function [] = SET_TEMP(setPoint,tempStable,timeStable,temp)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 lakeshoreQuery(strcat('SETP ',num2str(setPoint)));  % Set point to lakeshore
-getCurrentTemp = sampleSpaceTemperature;
+getCurrentTemp = sampleSpaceTemperature(temp);
 getCurrentWait = timeStable;
 unstable = false;
 while (abs(getCurrentTemp - setPoint) > tempStable) || (getCurrentWait >= 0)  % Continuously loop the time and temp stability until both are met
     while abs(getCurrentTemp - setPoint) > tempStable
         pause(2);  % Wait for temperature to reach set point
-        getCurrentTemp = sampleSpaceTemperature;
+        getCurrentTemp = sampleSpaceTemperature(temp);
         cprintf('blue','Current Temp: %3.2f.  Set point: %d.  Delta: %2.2f.\n',getCurrentTemp,setPoint,abs(getCurrentTemp - setPoint));
         % TODO: Check for errors here
     end
@@ -17,7 +17,7 @@ while (abs(getCurrentTemp - setPoint) > tempStable) || (getCurrentWait >= 0)  % 
         cprintf('blue','Wait for time stability: %d s left.\n',getCurrentWait);
         pause(1);                          % Wait 1 second
         getCurrentWait = getCurrentWait - 1;          % Subtract one from our counter
-        getCurrentTemp = sampleSpaceTemperature;
+        getCurrentTemp = sampleSpaceTemperature(temp);
         if abs(getCurrentTemp - setPoint) > tempStable  % check again for temp stability, if not stable then flag for restart
             unstable = true;
         end
