@@ -3,21 +3,21 @@
 % Set sample info
 sample.user = 'George';
 sample.material = 'In0.53Ga0.47As';
-sample.name = 'GAP500-IV-Post400K-YSpec';
-sample.area = '0.196';  % mm^2
+sample.name = 'FGA015-3-YSpec';
+sample.area = '0.0177';  % mm^2
 sample.comment = '-0.2V';
 
 % Set YSpec experiment parameters
 mfia.sample_time = 5;    % sec, length to sample each temp point, determines speed of scan and SNR
-mfia.ss_bias = 0.2;      % V, steady-state bias
+mfia.ss_bias = -0.2;      % V, steady-state bias
 ac_freq_start = 400;      % Hz, start lock in AC frequency, GN suggests ~100Hz
 ac_freq_final = 5e6;      % Hz, final frequency, GN suggests 5MHz (MFIA limit)
 ac_freq_steps = 145;      % Frequency step size on the log-scale
 
 % Set temperature parameters
-temp_init = 120;        % K, Initial temperature
-temp_step = 2.5;         % K, Temperature step size
-temp_final = 90;        % K, Ending temperature
+temp_init = 300;        % K, Initial temperature
+temp_step = 10;         % K, Temperature step size
+temp_final = 80;        % K, Ending temperature
 temp_idle = 200;        % K, Temp to set after experiment is over
 temp_stability = 0.2;   % K, Sets how stable the temperature point must be (set point +- stability)
 time_stability = 20;    % s, How long must temperature be stable before collecting data, useful if sample lags temperature or if PID settings are overshooting beyond the stability criteria above

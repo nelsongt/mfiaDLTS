@@ -1,18 +1,18 @@
 %SAMPLESPACETEMPERATURE - Get temperature from LakeShore 335
 %
-% temp = sampleSpaceTemperature() Read the temperature in the sample space.
+% temp = sampleSpaceTemperature(temp) Read the temperature in the sample space.
 % Temperature returned in K.
 %
 % Options
 %
-% sampleSpaceTemperature('string') returns the value as a string.
+% sampleSpaceTemperature(temp) returns the value for sensor struct.sample.
 %
 % Todd Karin
 % 10/05/2014
 
 %% Modified by George Nelson for setting sensor
 
-function temp = sampleSpaceTemperature(temp,varargin)
+function temp = sampleSpaceTemperature(struct)
 
 % Initialize communication to temperature controller.
 obj1 = instrfind('Type', 'gpib', 'BoardIndex', 0, 'PrimaryAddress', 12);
@@ -28,14 +28,14 @@ end
 % Get the temperature
 fopen(obj1)
 
-sense_string = strcat('KRDG? ',temp.sample);
+sense_string = strcat('KRDG? ',struct.sample);
 tempString = sn(query(obj1,sense_string));
 
-if nargin&&strcmpi(varargin{1},'string')
-    temp = tempString;
-else
-    temp = str2double(tempString);
-end
+%if nargin&&strcmpi(varargin{2},'string')
+%    temp = tempString;
+%else
+temp = str2double(tempString);
+%end
 
 % Close communication.
 fclose(obj1)

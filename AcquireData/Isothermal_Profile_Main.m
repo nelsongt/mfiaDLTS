@@ -4,8 +4,8 @@
 % Set sample info
 sample.user = 'George';
 sample.material = 'In0.53Ga0.47As';
-sample.name = 'GPD6-250keV10VP0';
-sample.area = '0.196';  % mm^2
+sample.name = 'FGA015-3-10VPre';
+sample.area = '0.0177';  % mm^2
 sample.comment = 'P0 30s 1.0MHz 125mV 4rej';
 
 % Set DLTS experiment parameters
@@ -19,8 +19,8 @@ pulse_height_final = -9.6;      % V, final pulse height
 pulse_height_step = 0.1;      % V, Pulse height step size
 
 % Set temperature parameters
-temp_test = 80;                % K, Temp to do isoDLTS
-temp_idle = 80;           % K, Temp to set after experiment is over
+temp_test = 240;                % K, Temp to do isoDLTS
+temp_idle = 240;           % K, Temp to set after experiment is over
 temp_stability = 0.05;      % K, Sets how close to the setpoint the temperature must be before collecting data (set point +- stability)
 time_stability = 30;       % s, How long must temperature be within temp_stability before collecting data, tests if PID settings overshoot set point, also useful if actual sample temp lags sensor temp
 
