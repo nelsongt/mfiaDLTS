@@ -14,10 +14,10 @@ mfia.pulse_height = 1.8;    % V, bias applied by pulse generator, absolute bias 
 mfia.full_period = 0.152;   % s, length of single experiment in time (must be longer than trns_length+pulse_width)
 mfia.trns_length = 0.150;   % s, amount of transient sampled and saved
 mfia.pulse_width = 0.001;   % s, length of pulse in time
-mfia.sample_time = 30;      % sec, length to sample each temp point, determines speed of scan and SNR
+mfia.sample_time = 30;      % s, length to sample each temp point, determines speed of scan and SNR
 
 % Set temperature control parameters
-temp_init = 300;            % K, Initial DLTS temperature
+temp_init = 297;            % K, Initial DLTS temperature
 temp_step = 0.5;            % K, Capture transient each temp. step
 temp_final = 50;            % K, DLTS ending temperature
 temp_idle = 200;            % K, Temp to set after experiment is over
@@ -30,6 +30,7 @@ temp.sample = 'B';          % Measure sensor (closest to sample), A or B
 temp.heatpower = 3;         % Heater power range, sets heater to high (3), medium (2), low (1) 
 
 % Configure MFIA Parameters - Advanced Users Only
+mfia.i_range = 0.0001;       % A, Current input range, GN suggests 100uA or 1mA (will round up to nearest power of 10; eg. 0.8mA->1.0mA)
 mfia.time_constant = 2.4e-6; % us, lock in time constant, GN suggests 2.4e-6
 mfia.ac_freq = 1.0e6;        % Hz, lock in AC frequency, GN suggests 1MHz
 mfia.ac_ampl = 0.125;        % V, lock in AC amplitude, GN suggests ~100 mV for good SNR
@@ -44,7 +45,7 @@ ziAddPath % ZI instrument driver load
 %%% END INIT %%%
 
 %%% MAIN %%%
-% Check for and initialize lakeshore 331
+% Check for and initialize lakeshore 33X
 if LAKESHORE_INIT(temp)==0
     return;
 end

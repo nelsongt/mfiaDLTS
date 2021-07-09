@@ -1,4 +1,4 @@
-function device = MFIA_INITtemp(mfia)
+function device = MFIA_INIT(mfia)
 
 
 %% MFIA Initialization, George Nelson Oct 2019
@@ -20,7 +20,7 @@ function device = MFIA_INITtemp(mfia)
   
   
   vrange = 10;
-  irange = 0.0001;
+  irange = mfia.i_range;
   phase_offset = 0;
     
   % Setup IA module  
