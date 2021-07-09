@@ -1,4 +1,4 @@
-%%%% MFIA CDLTS %%%%  Author:  George Nelson 2020
+%%%% MFIA CDLTS_MAIN %%%%  Author:  George Nelson 2021
 
 %%% Init %%%
 % Set sample info
@@ -14,7 +14,7 @@ mfia.pulse_height = 1.8;    % V, bias applied by pulse generator, absolute bias 
 mfia.full_period = 0.152;   % s, length of single experiment in time (must be longer than trns_length+pulse_width)
 mfia.trns_length = 0.150;   % s, amount of transient sampled and saved
 mfia.pulse_width = 0.001;   % s, length of pulse in time
-mfia.sample_time = 30;      % s, length to sample each temp point, determines speed of scan and SNR
+mfia.sample_time = 15;      % s, length to sample each temp point, determines speed of scan and SNR
 
 % Set temperature control parameters
 temp_init = 297;            % K, Initial DLTS temperature
@@ -35,11 +35,13 @@ mfia.time_constant = 2.4e-6; % us, lock in time constant, GN suggests 2.4e-6
 mfia.ac_freq = 1.0e6;        % Hz, lock in AC frequency, GN suggests 1MHz
 mfia.ac_ampl = 0.125;        % V, lock in AC amplitude, GN suggests ~100 mV for good SNR
 mfia.sample_rate = 107143;   % Hz, sampling rate Hz, for CDLTS use 53571 or 107143 or 214286
+mfia.sample_reject = 1;      % Rejected data points due to meter recovery from pulse, calibrate this by testing, this is in addition to auto-rejected samples using formula: 16*mfia.time_constant*mfia.sample_rate
 
 % Setup PATH - Do not change these
 sample.save_folder = strcat('..\Data\',sample.name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
 addpath(genpath('.\lakeshore'))		% point to lakeshore driver
 addpath(genpath('.\LabOneMatlab'))  % point to LabOneMatlab drivers
+addpath(genpath('.\Subroutines'))
 ziAddPath % ZI instrument driver load
 
 %%% END INIT %%%

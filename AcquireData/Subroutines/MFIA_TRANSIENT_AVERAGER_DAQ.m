@@ -9,11 +9,10 @@ capArray_pF = capArray*1e12;
 transients = size(capArray_pF,1);
 numSamples = size(capArray_pF,2);  %length of transient in data points
 calcRejectSamples = floor(16*mfia.time_constant*SR); %calculation of hardware recovery, derived from the MFIA user manual sect. 6.4.2 for 99% recovery using 8th order filter
-extraRejectSamples = 1; %if empirically it is seen that more data points should be rejected beyond the above calculation, add the extra # of points here
+extraRejectSamples = mfia.sample_reject; %if empirically it is seen that more data points should be rejected beyond the above calculation, add the extra # of points here
 rejectSamples = calcRejectSamples + extraRejectSamples;  %length of hardware recovery in data points
 realNumSamp = numSamples - rejectSamples;
 time = linspace(1/SR,(1/SR)*realNumSamp,realNumSamp);
-
 
 
 % Transient averaging & plotting

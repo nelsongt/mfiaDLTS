@@ -22,7 +22,13 @@ temp_idle = 200;        % K, Temp to set after experiment is over
 temp_stability = 0.2;   % K, Sets how stable the temperature point must be (set point +- stability)
 time_stability = 20;    % s, How long must temperature be stable before collecting data, useful if sample lags temperature or if PID settings are overshooting beyond the stability criteria above
 
+% Configure Lakeshore Parameters
+temp.control = 'B';         % Control sensor (closest to heater), A or B
+temp.sample = 'B';          % Measure sensor (closest to sample), A or B
+temp.heatpower = 3;         % Heater power range, sets heater to high (3), medium (2), low (1) 
+
 % Set MFIA Parameters
+mfia.i_range = 0.0001;       % A, Current input range, GN suggests 100uA or 1mA (will round up to nearest power of 10; eg. 0.8mA->1.0mA)
 mfia.time_constant = 10.0e-3;  % us, lock in time constant, GN suggests 2.4e-3
 mfia.pulse_height = 0.0;      % V, has to be zero for YSpec, don't change this
 mfia.ac_ampl = 0.1;           % V, lock in AC amplitude, GN suggests ~100 mV for good SNR
@@ -31,19 +37,19 @@ mfia.ac_freq = ac_freq_start; % Hz, not used for YSpec
 mfia.full_period = 0.150;     % s, not used for YSpec
 mfia.trns_length = 0.150;     % s, not used for YSpec
 mfia.pulse_width = 0.000;     % s, not used for YSpec
-mfia.irange = 0.0001;         % A, current range for MFIA  
 
 
 % Setup PATH
 sample.save_folder = strcat('..\Data\',sample.name,'_',datestr(now,'mm-dd-yyyy-HH-MM-SS'));  % folder data will be saved to, uses timecode so no overwriting happens
 addpath(genpath('.\lakeshore'))		% point to lakeshore driver
 addpath(genpath('.\LabOneMatlab'))  % point to LabOneMatlab drivers
+addpath(genpath('.\Subroutines'))
 ziAddPath % ZI instrument driver load
 
 
 %% MAIN %%
 % Check for and initialize lakeshore 331
-if LAKESHORE_INIT()==0
+if LAKESHORE_INIT(temp)==0
     return;
 end
 % Check for and initialize MFIA
@@ -56,15 +62,15 @@ current_num = 0;
 steps = ceil(abs(temp_init - temp_final)/temp_step);
 while current_num <= steps
     cprintf('blue', 'Waiting for set point (%3.2f)...\n',current_temp);
-    SET_TEMP(current_temp,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
+    SET_TEMP(current_temp,temp_stability,time_stability,temp); % Wait for lakeshore to reach set temp;
     for i=1:length(freqs)
         mfia.ac_freq = freqs(i);
-        %if freqs(i) < 1000  % Use these to change the MFIA current range, depends on sample TODO
-        %    mfia.irange = 0.0001;
+        %if freqs(i) < 1000  % Use these to change the MFIA current range, depends on sample TODO automate this using current input?
+        %    mfia.i_range = 0.0001;
         %elseif freqs(i) > 9900000
-        %    mfia.irange = 0.0001;
+        %    mfia.i_range = 0.0001;
         %elseif freqs(i) > 1000
-        %    mfia.irange = 0.0001;
+        %    mfia.i_range = 0.0001;
         %end
         [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(device,mfia);
         avg_G(i) = 1 / mean(sampleRes);
@@ -85,7 +91,7 @@ while current_num <= steps
 end
 
 cprintf('blue', 'Finished data collection, returning to idle temp.\n');
-SET_TEMP(temp_idle,temp_stability,time_stability); % Wait for lakeshore to reach set temp;
+SET_TEMP(temp_idle,temp_stability,time_stability,temp); % Wait for lakeshore to reach set temp;
 cprintf('green', 'All done.\n');
 
 %% END MAIN %%

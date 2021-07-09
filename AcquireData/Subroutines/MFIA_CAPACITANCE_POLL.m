@@ -15,7 +15,7 @@ function [timeStamp, sampleCap, sampleRes] = MFIA_CAPACITANCE_POLL(device,mfia)
   
   % Oscillator settings
   ziDAQ('setDouble', ['/' device '/imps/0/freq'], mfia.ac_freq);  % Here for YSpec
-  ziDAQ('setDouble', ['/' device '/imps/0/current/range'], mfia.irange);
+  ziDAQ('setDouble', ['/' device '/imps/0/current/range'], mfia.i_range); % Here for YSpec
   
   % Unsubscribe all streaming data
   ziDAQ('unsubscribe','*');
