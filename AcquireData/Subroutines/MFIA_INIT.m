@@ -31,6 +31,7 @@ function device = MFIA_INIT(mfia)
   ziDAQ('setInt', ['/' device '/system/impedance/precision'], 0);
   ziDAQ('setDouble', ['/' device '/imps/0/maxbandwidth'], 1000);
   ziDAQ('setDouble', ['/' device '/imps/0/omegasuppression'], 60);
+  ziDAQ('setDouble', ['/' device '/imps/0/confidence/lowdut2t/ratio', 1000);
  
   % Input settings, set to current and set range
   ziDAQ('setInt', ['/' device '/imps/0/auto/inputrange'], 0);
