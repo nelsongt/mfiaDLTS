@@ -1,4 +1,4 @@
-December 2020 Note:  Below readme is a bit outdated, will be updating shortly with v1.1 release. If interested in testing python version with gui, beta is here: https://github.com/nelsongt/mfiaDLTS2
+Note: If interested in testing python version with gui, beta is here: https://github.com/nelsongt/mfiaDLTS2
 
 **To Download**: Go to [releases page](https://github.com/nelsongt/mfiaDLTS/releases), current version is v1.1. Master branch is not always in a working state. Highly recommend updating to v1.1 if using older version.
 
@@ -7,11 +7,11 @@ Introduction
 
 This is a collection of tools I have developed over the course of my PhD for performing Deep Level Transient Spectroscopy (DLTS) using a Zurich Instruments MFIA. The tools are not in the most user friendly state, but this code is the most complete open-source DLTS implementation that I am aware of. I will continue to update the tools as they are actively used at the RIT lab.
 
-I developed my own code and built a custom DLTS setup after using two commercial DLTS solutions. I settled on the MFIA, which did not have any publically available (there is labview code used at IFPAN) DLTS software specifically built for it,  as my capacitance meter. The primary drive for this work was to build an affordable, modern DLTS system with the power and flexibility that comes with having one's own source code. For example, with minimal modification one could use this code to automatically perform DLTS experiments with different pulse widths without having to repeat the temperature scan. Eg. on each temp. step, measure a transient then change pulse width and measure again, repeatedly, then move on to next temp. step. In this way, the activation energy of the trap cross-section can be extracted without much effort. Similarly, one could do depth-profiling by changing the pulse height in an automated fashion. The possibilities are almost endless because of the variety of DLTS measurements that exist and the many niche requirements of particular samples.
+I developed my own code and built a custom DLTS setup after using two commercial DLTS solutions. I settled on the MFIA, which did not have any publically available (there is labview code used at IFPAN and also University of Oslo) DLTS software specifically built for it at the time,  as my capacitance meter. The primary drive for this work was to build an affordable, modern DLTS system with the power and flexibility that comes with having one's own source code. For example, with minimal modification one could use this code to automatically perform DLTS experiments with different pulse widths without having to repeat the temperature scan. Eg. on each temp. step, measure a transient then change pulse width and measure again, repeatedly, then move on to next temp. step. In this way, the activation energy of the trap cross-section can be extracted without much effort. Similarly, one could do depth-profiling by changing the pulse height in an automated fashion. The possibilities are almost endless because of the variety of DLTS measurements that exist and the many niche requirements of particular samples.
 
 More about the development of these tools and some of the results can be read about in my dissertation: https://scholarworks.rit.edu/theses/10100/
 
-There is a DLTS introduction also included on this github site, see DLTSBackground.pdf. I plan to continue to update this DLTS theory manual that is to accompany the code. I will also update with a wiring diagram, and some pdf presentations on how to use the software.
+There is a DLTS introduction also included on this github site, see DLTSBackground.pdf. I plan to continue to update this DLTS theory manual that is to accompany the code. A wiring diagram and a walkthrough of using the software are also provided as pdf files.
 
 The data files are compatible with the LDLTS software database, so that Laplace DLTS can be performed if required (requires purchasing a license to use the algorithms): http://info.ifpan.edu.pl/Dodatki/WordPress/laplacedlts/
 
@@ -70,7 +70,7 @@ Updated for V0.9
 
 #### AcquireData
 
-To take data, make sure that the software dependencies are installed correctly. You will then need to wire the MFIA properly, for this I will make a wiring diagram in the future. In the meantime:
+To take data, make sure that the software dependencies are installed correctly. You will then need to wire the MFIA properly, for this reference the wiring diagram pdf file. To summarize:
 
 -Connect sample leads to MFIA in 2-wire mode.
 
@@ -80,7 +80,9 @@ To take data, make sure that the software dependencies are installed correctly. 
 
 -Connect ethernet cable from MFIA to PC. PC and cable must be gigabit or better.
 
--Open CDLTS_Main.m. In this file, you will setup the experiment variables like temperature range and temperature step and sample biasing and pulsing. You will also describe the sample with a name and other key parameters.
+To run software to collect transients, view the walkthrough pdf file. Summary is here:
+
+-Open CDLTS_Main.m in AcquireData folder. In this file, you will setup the experiment variables like temperature range and temperature step and sample biasing and pulsing. You will also describe the sample with a name and other key parameters.
 
 Once setup, start the program and the output will make sure the MFIA and the lakeshore are working and configure them. After that, the temperature will be stabilized at the first temp step. Once the temperature is stable, the MFIA will be asked for data using its DAQ module. The code is setup to record data using a hardware trigger, where the voltage pulse is used as the trigger. Individual transients are recorded at the 'sampling rate' for a length of time determined by the 'individual transient sampling period'. The total number of transients recorded is determined by the 'sampling time', which is the total time you want to take data for each temperature point. Then, however many transients collected during that 'sampling time' are averaged. Finally, the averaged data is saved to disk before moving to the next temperature.
 
@@ -90,15 +92,15 @@ The scan process in time is: Temp set point ----- wait for temperature of cryost
 
 #### ProcessData
 
-After CDLTS_Main.m has collected all .iso files, take the generated data folder and move it from AcquireData to ProcessData. Then, open Transient_To_CDLTS.m and point the data folder to the folder that you just moved. It will go into that folder and process all the .iso files to generate a spectrum.
+After CDLTS_Main.m has collected the .iso files, a subfolder is generated in parent Data folder. The parent Data folder will be created on the first use of CDLTS_Main.m. The subfolder with .iso transient files will be named "SampleName-DateCode". Optionally yename this subfolder to your liking and copy the subfolder name text because this will be used to point to the data to generate CDLTS spectra in the next step. Go to ProcessData folder and open Transient_To_CDLTS.m and point the Folder_Name parameter to the data subfolder (paste the name of the folder, eg. 'SampleName-DateCode', here). It will go into that folder and process all the .iso files to generate a spectrum.
 
-There are many complicated options in this file, such as choice of weighting function, that can be used by experts to tailor their processing. By default, the rectangular (lock-in) weighting function is used with emission rate constants from 20 Hz to 2000 Hz.
+There are many advanced options in this file, such as choice of weighting function, that can be used by experts to tailor their processing. By default, the exponential weighting function is used with emission rate constants from 20 Hz to 1000 Hz.
 
 To extract the DLTS parameters, the matlab data cursor can be used on the plotted spectra to find the peaks. These peaks should be used to generate an Arrhenius plot. There is primitive support for doing this automatically, but it currently does not work well. You will have to generate most Arrhenius plots manually. This process can be understood by reading DLTSBackground.pdf.
 
 #### SimulateData
 
-To simulate DLTS, Transient_Sim.m can be used to generate transients for any number of traps. The trap characteristics (energy, cross-section, density) can be inputted in the simulator and these values should be recovered after processing the spectra. To create the conventional spectra from the simulated transients, use Transient_To_CDLTS.m. Take the generated transient files and place them in a folder in the ProcessData folder, then point Transient_To_CDLTS.m to that folder. Currently, the automated peak fitting is primitive, but creating the Arrhenius plots from the plotted spectra is simple to do manually.
+To simulate DLTS, Transient_Sim.m can be used to generate transients for any number of traps. The trap characteristics (energy, cross-section, density) can be inputted in the simulator and these values should be recovered after processing the spectra. To create the conventional spectra from the simulated transients, use Transient_To_CDLTS.m. Take the generated transient files and place them in a subfolder in the Data folder, then point Transient_To_CDLTS.m to that subfolder by its name. Currently, the automated peak fitting is primitive, but creating the Arrhenius plots from the plotted spectra is simple to do manually.
 
 *Initially developed by George Nelson of NanoPower Research Labs at Rochester Institute of Technology to be used in experiments funded by AF AEDC under SBIR# F151-173-0753*
 
