@@ -66,7 +66,7 @@ AcquireData:
   
 How To Use
 ------------
-Updated for V0.9
+Updated for V1.1
 
 #### AcquireData
 
@@ -82,7 +82,9 @@ To take data, make sure that the software dependencies are installed correctly. 
 
 To run software to collect transients, view the walkthrough pdf file. Summary is here:
 
--Open CDLTS_Main.m in AcquireData folder. In this file, you will setup the experiment variables like temperature range and temperature step and sample biasing and pulsing. You will also describe the sample with a name and other key parameters.
+-Open CDLTS_Main.m in AcquireData folder. In this file, you will setup the experiment variables like temperature range and temperature step and sample biasing and pulsing. You will also describe the sample with a name and other key parameters. Temperature scans can go from low->high or high->low. After the experiment is over, the temperature will be set to the idle temperature parameter value you set.
+
+Temperature stabilization is described in the walkthrough pdf file though it should be intuitive once you try it out.
 
 Once setup, start the program and the output will make sure the MFIA and the lakeshore are working and configure them. After that, the temperature will be stabilized at the first temp step. Once the temperature is stable, the MFIA will be asked for data using its DAQ module. The code is setup to record data using a hardware trigger, where the voltage pulse is used as the trigger. Individual transients are recorded at the 'sampling rate' for a length of time determined by the 'individual transient sampling period'. The total number of transients recorded is determined by the 'sampling time', which is the total time you want to take data for each temperature point. Then, however many transients collected during that 'sampling time' are averaged. Finally, the averaged data is saved to disk before moving to the next temperature.
 
