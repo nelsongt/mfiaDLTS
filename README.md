@@ -94,7 +94,7 @@ The scan process in time is: Temp set point ----- wait for temperature of cryost
 
 #### ProcessData
 
-After CDLTS_Main.m has collected the .iso files, a subfolder is generated in parent Data folder. The parent Data folder will be created on the first use of CDLTS_Main.m. The subfolder with .iso transient files will be named "SampleName-DateCode". Optionally yename this subfolder to your liking and copy the subfolder name text because this will be used to point to the data to generate CDLTS spectra in the next step. Go to ProcessData folder and open Transient_To_CDLTS.m and point the Folder_Name parameter to the data subfolder (paste the name of the folder, eg. 'SampleName-DateCode', here). It will go into that folder and process all the .iso files to generate a spectrum.
+After CDLTS_Main.m has collected the .iso files, a subfolder is generated in parent Data folder. The parent Data folder will be created on the first use of CDLTS_Main.m. The subfolder with .iso transient files will be named "SampleName-DateCode". Optionally rename this subfolder to your liking and copy the subfolder name text because this will be used to point to the data to generate CDLTS spectra in the next step. Go to ProcessData folder and open Transient_To_CDLTS.m and point the Folder_Name parameter to the data subfolder (paste the name of the folder, eg. 'SampleName-DateCode', here). Run the script and it will go into that folder and process all the .iso files to generate a spectrum.
 
 There are many advanced options in this file, such as choice of weighting function, that can be used by experts to tailor their processing. By default, the exponential weighting function is used with emission rate constants from 20 Hz to 1000 Hz.
 
