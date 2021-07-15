@@ -82,7 +82,7 @@ To take data, make sure that the software dependencies are installed correctly. 
 
 To run software to collect transients, view the walkthrough pdf file. Summary is here:
 
--Open CDLTS_Main.m in AcquireData folder. In this file, you will setup the experiment variables like temperature range and temperature step and sample biasing and pulsing. You will also describe the sample with a name and other key parameters. Temperature scans can go from low->high or high->low. After the experiment is over, the temperature will be set to the idle temperature parameter value you set.
+Open CDLTS_Main.m in AcquireData folder. In this file, you will setup the experiment variables like temperature range and temperature step and sample biasing and pulsing. You will also describe the sample with a name and other key parameters. Temperature scans can go from low->high or high->low. After the experiment is over, the temperature will be set to the idle temperature parameter value you set.
 
 Temperature stabilization is described in the walkthrough pdf file though it should be intuitive once you try it out.
 
