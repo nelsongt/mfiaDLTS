@@ -35,7 +35,7 @@ Requirements
 Organization of Code
 ------------
 
-In this early stage, the code is organized into 3 folders:
+The code is organized into 3 folders, generally you will start with either AcquireData or SimulateData and then process the generated data in ProcessData:
 
 AcquireData - This is code to gather data for both Conventional DLTS (CDLTS) and Admittance Spectroscopy (YSpec). I will not explain the YSpec code at this time. The CDLTS code is designed to set the temperature via a lakeshore, then communicate with the MFIA to setup the DLTS experiment and then record the capacitance vs. time data. The CDLTS program outputs an .iso file for each temperature setpoint containing the digitized average transient data.
 
@@ -60,7 +60,7 @@ AcquireData:
   
   [required, not included] LabOne Matlab Driver (place in AcquireData folder): https://www.zhinst.com/downloads
   
-  [required, included] lakshore driver: https://www.mathworks.com/matlabcentral/fileexchange/48366-lakeshore
+  [required, included] lakeshore driver: https://www.mathworks.com/matlabcentral/fileexchange/48366-lakeshore
   
   [required, included] cprintf: https://www.mathworks.com/matlabcentral/fileexchange/24093-cprintf-display-formatted-colored-text-in-the-command-window
   
