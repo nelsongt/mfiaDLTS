@@ -7,7 +7,7 @@ addpath(genpath('.\Subroutines'))
 
 
 %%%%%%% Begin Main %%%%%%
-Folder_Name = 'GPD1-2MeV_28-10-2020-19-08-52V';
+Folder_Name = 'GAP500-3_Pre';
 
 [Sample_Name,Data,Temps,ss_caps,sampling_rate] = FolderRead(Folder_Name,'iso');
 total = length(Data);
@@ -17,7 +17,7 @@ total = length(Data);
 %end
 
 %% Define list of rate windows           NOTE: May need to be changed depending on weighting function
-%rate_window = logspace(log10(20),log10(110),10);  % auto generate a list
+%rate_window = logspace(log10(20),log10(1000),100);  % auto generate a list
 rate_window = [20,50,100,200,500,1000];  % suggested windows: 20,50,100,200,500,1000,2000,5000
 %rate_window = [16,32,64,128,256,512];  % also a good list: 16,32,64,256,512,1024
 %rate_window = 20;                     % single rate good for plotting
@@ -90,8 +90,8 @@ end
 %set(gca,'yscale','log');
 % legend stuff %
 lgd = legend(num2str(rate_window(:)));
-title(lgd,'Rate Constant (1/s)')
-lgd.FontSize = 11
+title(lgd,'Rate Constant (1/s)');
+lgd.FontSize = 11;
 box on
 % end legend stuff %
 
@@ -139,8 +139,8 @@ end
 
  %legend stuff %
 lgd2 = legend(num2str(rate_window(:)));
-title(lgd2,'Rate Constant (1/s)')
-lgd2.FontSize = 11
+title(lgd2,'Rate Constant (1/s)');
+lgd2.FontSize = 11;
 box on
  %end legend stuff %
 hold off;

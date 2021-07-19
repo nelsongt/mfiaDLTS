@@ -17,7 +17,7 @@ mfia.pulse_width = 0.001;   % s, length of pulse in time
 mfia.sample_time = 15;      % s, length to sample each temp point, determines speed of scan and SNR
 
 % Set temperature control parameters
-temp_init = 297;            % K, Initial DLTS temperature
+temp_init = 300;            % K, Initial DLTS temperature
 temp_step = 0.5;            % K, Capture transient each temp. step
 temp_final = 50;            % K, DLTS ending temperature
 temp_idle = 200;            % K, Temp to set after experiment is over
