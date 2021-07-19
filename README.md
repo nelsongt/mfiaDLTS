@@ -1,6 +1,6 @@
 Note: If interested in testing python version with gui, beta is here: https://github.com/nelsongt/mfiaDLTS2
 
-**To Download**: Go to [releases page](https://github.com/nelsongt/mfiaDLTS/releases), current version is v1.1. Master branch is not always in a working state. Highly recommend updating to v1.1 if using older version.
+**To Download**: Go to [releases page](https://github.com/nelsongt/mfiaDLTS/releases), current version is v1.1.1. Master branch is not always in a working state. Highly recommend updating to v1.1.1 if using older version.
 
 Introduction
 ------------
