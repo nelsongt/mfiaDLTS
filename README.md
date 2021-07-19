@@ -60,7 +60,7 @@ AcquireData:
   
   [required, not included] LabOne Matlab Driver (place in AcquireData folder): https://www.zhinst.com/downloads
   
-  [required, included] lakshore driver: https://www.mathworks.com/matlabcentral/fileexchange/48366-lakeshore
+  [required, included] lakeshore driver: https://www.mathworks.com/matlabcentral/fileexchange/48366-lakeshore
   
   [required, included] cprintf: https://www.mathworks.com/matlabcentral/fileexchange/24093-cprintf-display-formatted-colored-text-in-the-command-window
   
