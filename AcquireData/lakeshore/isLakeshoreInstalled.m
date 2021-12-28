@@ -1,7 +1,8 @@
-%ISLAKESHOREINSTALLED - Check whether Lakeshore 335 is conected
+%ISLAKESHOREINSTALLED - Check whether Lakeshore 330 or 335 is conected
 %
-%  isColdFingerInstalled() returns 1 if matlab can communicate with the
-%  Lakeshore 335 temperature controller via GPIB and 0 if matlab cannot.
+%  isLakeshoreInstalled() returns the model number if matlab can commun-
+%  icate with the Lakeshore 33X temperature controller via GPIB and 0 if
+%  matlab cannot.
 %
 %  Works by sending '*idn?' query through GPIB. 
 
@@ -10,7 +11,7 @@
 
 %% Modified by George Nelson for Model 330
 
-function installed = isLakeshoreInstalled()
+function installed = isLakeshoreInstalled(model)
 
 % Initialize communication to temperature controller.
 obj1 = instrfind('Type', 'gpib', 'BoardIndex', 0, 'PrimaryAddress', 12);
@@ -30,11 +31,11 @@ fopen(obj1)
 fprintf(obj1, '*idn?');
 pause(.05);
 
-cut = 1:10;
-idnCheck330 = 'LSCI,MODEL330';
+cut = 1:12;
+idnCheck33 = 'LSCI,MODEL33';
 idn = fscanf(obj1);
 
-if strcmp(idn(cut),idnCheck330(cut))
+if strcmp(idn(cut),idnCheck33(cut))
     installed = 1;
 else
     installed = 0;
