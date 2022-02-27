@@ -25,7 +25,7 @@ Requirements
   
   -Cryostat with electrical leads for device connection
   
-  -Lakeshore temperature controller to control cryostat temperature
+  -Lakeshore temperature controller, models 331 and 335 (contact developer for possibility of using other models)
   
   -Zurich Instruments MFIA
   
