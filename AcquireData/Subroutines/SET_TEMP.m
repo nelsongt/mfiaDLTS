@@ -1,10 +1,10 @@
 function [] = SET_TEMP(setPoint,tempStable,timeStable,temp)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
-if temp.model == 330
+if temp.model == 331
     lakeshoreQuery(strcat('SETP ',num2str(setPoint)));  % Set point to lakeshore
 elseif temp.model == 335
-    lakeshoreQuery(strcat('SETP 1,',num2str(setPoint)));  % Set point to lakeshore
+    lakeshoreSet(strcat('SETP 1,',num2str(setPoint)));  % Set point to lakeshore
 end
 getCurrentTemp = sampleSpaceTemperature(temp);
 getCurrentWait = timeStable;

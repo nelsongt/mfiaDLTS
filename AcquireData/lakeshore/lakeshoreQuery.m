@@ -1,16 +1,12 @@
+function response = lakeshoreQuery(command)
 %LAKESHOREQUERY - Send query to lakeshore via gpib
 %
-% [tempB, tempA] = cryostatTemperature() gets the temperature in the spaces
-% B and A from the Lakeshore temperature controller.
-%
-% Attach the Lake Shore 335 temperature controller via GPIB. This function
-% returns the temperature in spaces B and A. In the big magnet setup, B is
-% the sample space.
+% This function returns the response from the Lakeshore to whicher
+% command is passed to this function
 %
 % Todd Karin
 % 05/14/2013
-
-function response = lakeshoreQuery(commmand)
+% Modified by GN for generic queries
 
 % Initialize communication to temperature controller.
 obj1 = instrfind('Type', 'gpib', 'BoardIndex', 0, 'PrimaryAddress', 12);
@@ -26,7 +22,7 @@ end
 % Get the temperature
 try
     fopen(obj1);
-    response = sn(query(obj1,commmand));
+    response = sn(query(obj1,command));
 
     % Close communication.
     fclose(obj1);

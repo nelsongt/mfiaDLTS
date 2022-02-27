@@ -28,7 +28,6 @@ time_stability = 5;         % s, How long must temperature be within temp_stabil
 temp.control = 'B';         % Control sensor (closest to heater), A or B
 temp.sample = 'B';          % Measure sensor (closest to sample), A or B
 temp.heatpower = 3;         % Heater power range, sets heater to high (3), medium (2), low (1)
-temp.model = 330;           % Lakeshore model number (or command protocol, use 330 for 330,331,332, and 335 for 335)
 
 % Configure MFIA Parameters - Advanced Users Only
 mfia.i_range = 0.0001;       % A, Current input range, GN suggests 100uA or 1mA (will round up to nearest power of 10; eg. 0.8mA->1.0mA)
@@ -49,7 +48,9 @@ ziAddPath % ZI instrument driver load
 
 %%% MAIN %%%
 % Check for and initialize lakeshore 33X
-if LAKESHORE_INIT(temp)==0
+temp.model = 0;
+temp = LAKESHORE_INIT(temp)
+if temp.model==0
     return;
 end
 % Check for and initialize MFIA
